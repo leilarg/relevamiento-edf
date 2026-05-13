@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Relevamiento EDF</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F8F7F4;--surface:#FFFFFF;--border:#E5E2DA;--border2:#CCCAB8;
+  --text:#1A1A18;--text2:#6B6960;--text3:#A09D94;
+  --purple:#533AB7;--purple-bg:#EEEDFE;--purple-text:#3C3489;
+  --green-bg:#E1F5EE;--green-text:#0F6E56;
+  --amber-bg:#FAEEDA;--amber-text:#854F0B;
+  --blue-bg:#E6F1FB;--blue-text:#0C447C;
+  --red:#E24B4A;--radius:12px;--radius-sm:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg)}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 16px 12px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.topbar-back{background:none;border:none;cursor:pointer;color:var(--text2);font-size:20px;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+.topbar-back:active{background:var(--bg)}
+.topbar-info{flex:1;min-width:0}
+.topbar-title{font-size:16px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-sub{font-size:12px;color:var(--text2);margin-top:1px}
+.topbar-action{background:none;border:1px solid var(--border2);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap}
+.topbar-action:active{background:var(--bg)}
+
+/* SCROLL CONTENT */
+.content{flex:1;overflow-y:auto;padding:16px}
+
+/* LOGIN */
+.login-hero{padding:28px 20px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.login-logo-icon{width:36px;height:36px;background:var(--purple);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.login-logo-text{font-size:20px;font-weight:700;color:var(--text)}
+.login-sub{font-size:13px;color:var(--text2)}
+.login-section{padding:16px}
+.login-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.vendor-btn{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px}
+.vendor-btn:active{background:var(--bg)}
+.vendor-avatar{width:38px;height:38px;border-radius:50%;background:var(--purple-bg);color:var(--purple-text);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vendor-info{flex:1;min-width:0}
+.vendor-name{font-size:14px;font-weight:600;color:var(--text)}
+.vendor-stats{font-size:12px;color:var(--text2);margin-top:2px}
+.vendor-pct{font-size:13px;font-weight:600;color:var(--text2)}
+.progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.progress-fill{height:100%;background:var(--purple);border-radius:2px;transition:width .3s}
+.admin-btn{width:100%;background:none;border:1px solid var(--border2);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--text2);font-size:14px;font-weight:500}
+.admin-btn:active{background:var(--border)}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{width:100%;padding:10px 14px 10px 38px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);outline:none}
+.search-wrap input:focus{border-color:var(--purple)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;pointer-events:none}
+
+/* SECTION LABELS */
+.sec-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin:14px 0 8px}
+.sec-label:first-child{margin-top:0}
+
+/* CLIENT CARDS */
+.client-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px;cursor:pointer;active:background:var(--bg)}
+.client-card:active{background:var(--bg)}
+.client-card.done{border-left:3px solid #1D9E75}
+.client-card.pending{border-left:3px solid var(--border2)}
+.card-top{display:flex;align-items:flex-start;gap:8px}
+.card-body{flex:1;min-width:0}
+.card-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
+.card-meta{font-size:12px;color:var(--text2);margin-top:3px}
+.card-id{font-size:11px;color:var(--text3);margin-top:2px}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.badge-ok{background:var(--green-bg);color:var(--green-text)}
+.badge-pend{background:var(--amber-bg);color:var(--amber-text)}
+.badge-new{background:var(--purple-bg);color:var(--purple-text)}
+.edf-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.pill{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.pill-ccu{background:var(--blue-bg);color:var(--blue-text)}
+.pill-ado{background:var(--green-bg);color:var(--green-text)}
+.pill-gray{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
+
+/* EDF DETAIL SCREEN */
+.edf-esperado{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.edf-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.edf-number{font-size:13px;font-weight:600;color:var(--text2)}
+.edf-filled{background:#F0FBF6;border-color:#A8DFC7}
+.edf-filled .edf-number{color:var(--green-text)}
+.edf-data-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--bg)}
+.edf-data-row:last-child{border-bottom:none}
+.edf-data-label{color:var(--text2)}
+.edf-data-val{font-weight:500;color:var(--text)}
+.edf-actions{display:flex;gap:8px;margin-top:10px}
+.btn-sm{flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;text-align:center}
+.btn-outline{background:none;border:1px solid var(--border2);color:var(--text)}
+.btn-outline:active{background:var(--bg)}
+.btn-danger-sm{background:none;border:1px solid var(--red);color:var(--red)}
+.extra-edf-note{font-size:12px;color:var(--text3);text-align:center;padding:12px;background:var(--bg);border-radius:8px;margin-bottom:10px}
+
+/* FAB */
+.fab-wrap{padding:12px 16px;background:var(--bg);border-top:1px solid var(--border);position:sticky;bottom:0}
+.fab{width:100%;padding:14px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer}
+.fab:active{opacity:.9}
+.fab-outline{background:var(--surface);color:var(--text);border:1px solid var(--border2)}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:16px}
+.modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
+
+/* FORMS */
+.form-row{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;font-size:15px;color:var(--text);outline:none}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--purple);background:var(--surface)}
+.form-row textarea{height:70px;resize:none}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio-opt{display:flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--border2);border-radius:10px;cursor:pointer;font-size:14px;color:var(--text);background:var(--bg)}
+.radio-opt input{width:auto;margin:0;accent-color:var(--purple)}
+.radio-opt.sel{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-text);font-weight:500}
+.btn-row{display:flex;gap:10px;margin-top:16px}
+.btn-cancel{flex:1;padding:13px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;color:var(--text)}
+.btn-save{flex:1;padding:13px;background:var(--purple);border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;color:#fff}
+.btn-save:active,.btn-cancel:active{opacity:.85}
+
+/* ADMIN */
+.stats-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.stat-n{font-size:26px;font-weight:700;color:var(--text)}
+.stat-l{font-size:12px;color:var(--text2);margin-top:3px}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#1A1A18;color:#fff;font-size:13px;font-weight:500;padding:10px 20px;border-radius:20px;z-index:200;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--text2);font-size:14px}
+.empty-icon{font-size:36px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- LOGIN -->
+<div class="screen active" id="sc-login">
+  <div class="login-hero">
+    <div class="login-logo">
+      <div class="login-logo-icon">❄</div>
+      <div class="login-logo-text">Relevamiento EDF</div>
+    </div>
+    <div class="login-sub">Seleccioná tu nombre para continuar</div>
+  </div>
+  <div class="login-section">
+    <div class="login-label">Vendedores</div>
+    <div id="vendor-list"></div>
+    <div style="margin-top:8px;border-top:1px solid var(--border);padding-top:14px">
+      <button class="admin-btn" onclick="goAdmin()">
+        <span>🔐</span> Acceso administrador
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- VENDOR LIST -->
+<div class="screen" id="sc-vendor">
+  <div class="topbar">
+    <div class="topbar-info">
+      <div class="topbar-title" id="v-title">—</div>
+      <div class="topbar-sub" id="v-sub">—</div>
+    </div>
+    <button class="topbar-action" onclick="goLogin()">Salir</button>
+  </div>
+  <div class="content" style="padding-bottom:0">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="v-search" placeholder="Buscar cliente o ID..." oninput="renderVendorList()">
+    </div>
+    <div id="v-client-list"></div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="fab-wrap">
+    <button class="fab fab-outline" onclick="openNuevoClienteModal()">+ Agregar cliente no listado</button>
+  </div>
+</div>
+
+<!-- CLIENT EDF SCREEN -->
+<div class="screen" id="sc-cliente">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goVendor()">←</button>
+    <div class="topbar-info">
+      <div class="topbar-title" id="c-title">—</div>
+      <div class="topbar-sub" id="c-sub">—</div>
+    </div>
+  </div>
+  <div class="content" style="padding-bottom:0">
+    <div id="c-edf-content"></div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="fab-wrap">
+    <button class="fab" onclick="openAddEDFModal()">+ Agregar heladera adicional</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="screen" id="sc-admin">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goLogin()">←</button>
+    <div class="topbar-info">
+      <div class="topbar-title">Panel administrador</div>
+    </div>
+    <button class="topbar-action" onclick="exportExcel()">📥 Excel</button>
+  </div>
+  <div class="content">
+    <div class="stats-row" id="admin-stats"></div>
+    <div class="sec-label">Avance por vendedor</div>
+    <div id="admin-vendors"></div>
+  </div>
+</div>
+
+<!-- ADMIN VENDOR DETAIL -->
+<div class="screen" id="sc-admin-v">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goAdmin()">←</button>
+    <div class="topbar-info">
+      <div class="topbar-title" id="av-title">—</div>
+    </div>
+  </div>
+  <div class="content" id="av-content"></div>
+</div>
+
+</div><!-- .app -->
+
+<!-- MODAL EDF FORM -->
+<div class="modal-bg" id="modal-edf">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-edf-title">Cargar heladera</div>
+    <div class="form-row">
+      <label class="form-label">N° de Serie *</label>
+      <input type="text" id="f-serie" placeholder="Ej: EDF-00234" autocomplete="off">
+    </div>
+    <div class="form-row">
+      <label class="form-label">N° de Activo (opcional)</label>
+      <input type="text" id="f-activo" placeholder="Dejar vacío si no tiene">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Tipo EDF</label>
+      <div class="radio-group" id="rg-tipo">
+        <label class="radio-opt" onclick="selRG('rg-tipo',this)"><input type="radio" name="f-tipo" value="CCU"> CCU — Cervezas</label>
+        <label class="radio-opt" onclick="selRG('rg-tipo',this)"><input type="radio" name="f-tipo" value="ADO"> ADO — Aguas</label>
+      </div>
+    </div>
+    <div class="form-row" id="row-puertas">
+      <label class="form-label">Puertas</label>
+      <div class="radio-group" id="rg-puertas">
+        <label class="radio-opt" onclick="selRG('rg-puertas',this)"><input type="radio" name="f-puertas" value="1"> 1 puerta</label>
+        <label class="radio-opt" onclick="selRG('rg-puertas',this)"><input type="radio" name="f-puertas" value="2"> 2 puertas</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Movimiento *</label>
+      <div class="radio-group" id="rg-mov">
+        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="Instalacion"> Instalación</label>
+        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="Retiro"> Retiro</label>
+        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="Baja"> Baja</label>
+        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="No Gestionable"> No Gestionable</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Observaciones</label>
+      <textarea id="f-obs" placeholder="Estado, roturas, novedades..."></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveEDF()">Guardar ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO CLIENTE -->
+<div class="modal-bg" id="modal-nuevo">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Agregar cliente no listado</div>
+    <div class="form-row">
+      <label class="form-label">ID Cliente (si lo tenés)</label>
+      <input type="text" id="nc-id" placeholder="Opcional">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Razón Social *</label>
+      <input type="text" id="nc-razon" placeholder="Nombre del negocio">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Rubro</label>
+      <input type="text" id="nc-rubro" placeholder="Almacén, kiosco, restaurante...">
+    </div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save" onclick="saveNuevoCliente()">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const DATA_SEED = {"ANDREA RAMIREZ":[{"id":"3347","razon":"ORLANDO JULIAN MATIAS","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"505","razon":"CARECO SUPERS S.A-CENTRAL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"747","razon":"SCHMUNCK LUCAS ADRIAN","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4716","razon":"MARTINEZ SANDRA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5195","razon":"SUPER BONYOS SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5394","razon":"SUPER BONYOS SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5727","razon":"DE ANDREA ALEJANDRO AGUSTIN","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6771","razon":"RIVAS JULIO","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6195","razon":"WU HAIDONG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6196","razon":"HUANG RONGSHENG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8204","razon":"VERA LEONEL","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8982","razon":"MOLINA ALEJANDRA ESTELA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4941","razon":"WARD TOMAS ROBERTO","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"1544","razon":"DELUCHI JIMENA VANESA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"2917","razon":"CATRACCHIA FRANCISCO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"6819","razon":"VARELA FERNANDO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8212","razon":"SILVA DEBORA YANINA Y GONZALEZ NATALIE JEANETTE","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6931","razon":"PEREZ AGUSTIN NAZARENO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7053","razon":"CHORHY IGNACIO JAVIER","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8218","razon":"ZHENG QIWEN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8852","razon":"TRESAR REGIA Y TANO","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"7058","razon":"PINTZAS MATIAS MIGUEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]}],"FRANCISCO PIZZI":[{"id":"737","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"796","razon":"GHESSI MARCOS DAMIAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"913","razon":"CHEN JIE","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1040","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"1186","razon":"RIENZI GONZALO LEONEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1213","razon":"LOPEZ VERONICA SOLEDAD","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1283","razon":"LIN MEIXIA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1374","razon":"LIU LIFEN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1523","razon":"CHEN SHIGUANG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"2230","razon":"LIN GUOXIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"3309","razon":"DEMARCO MARINA ELISABETH","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"3364","razon":"DEMINICIS SERGIO ALCIDES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"3410","razon":"RODRIGUEZ CECILIA ROXANA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4249","razon":"WANG WENJUAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"5119","razon":"RIVERO YANINA SOLEDAD","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5138","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5139","razon":"PIABEL SERVICIOS ALIMENTICIOS","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"5293","razon":"ISLAS ORTIZ MARIO NICOLAS","rubro":"PAN/VER/CARN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6211","razon":"ZALAZAR DAIANA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6272","razon":"ROSSI MARIA SOLEDAD","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"515","razon":"DI TATA RENZO JAVIER","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1032","razon":"ITTURRIOZ RICARDO","rubro":"PAN/VER/CARN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1578","razon":"GIACOY MONICA ISABEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"1829","razon":"CLIMINO SERGIO JAVIER","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"2270","razon":"PUYELLI CARLOS ALBERTO","rubro":"VINOTECAS","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4003","razon":"MATESA MILAGROS","rubro":"PAN/VER/CARN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5467","razon":"BONAPARTE ROSEMARY HAYDEE","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5505","razon":"GOBETTI DANIELA ANDREA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6326","razon":"ACEBAL MARCOS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6950","razon":"VIVANCO DEBORA EUGENIA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7040","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"8899","razon":"CAPECCI MARCELA ALEJANDRA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8958","razon":"MORETTI MARIA AILIN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9040","razon":"LOREZA BEAUTY CENTER","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9082","razon":"RONDON JUAN MANUEL","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6379","razon":"BOCCONI ERICA","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8456","razon":"BRAÑAS EDUARDO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9128","razon":"ALTO RIO SEGURO S.A.","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9294","razon":"SANCHEZ SEBASTIAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"3700","razon":"DIAZ YANINA","rubro":"KIOSCO","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"9187","razon":"ROMEO ADRIAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]}],"MARINA COLLAZO":[{"id":"345","razon":"COOP.AGROP.DE S.A.ARECO LTDA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1171","razon":"WANG XIUYAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"3589","razon":"ARECO RUGBY CLUB","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"3637","razon":"CHEN QING","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4446","razon":"CHEN FANGJIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5439","razon":"BISOGNO MARTIN","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5884","razon":"CHEN QU","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"5991","razon":"CLUB ATLETICO RIVER PLATE","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6540","razon":"DOLEZOR ANAHI ROCIO","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7074","razon":"SOLVEYRA JOSE MARIA","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7167","razon":"SUPER CAMPEON SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8796","razon":"CARDENAS ALEXIS EZEQUIEL","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8282","razon":"YAN LIANGSONG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8739","razon":"ALVAREZ MARIO ALBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4647","razon":"BRITES FLAVIA MARIANGELES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6069","razon":"DON CARMELO ALIMENTOS CONGELADOS","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6204","razon":"PUNTE GASTON LUIS","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6309","razon":"GRAMUGLIA JUAN SEBASTIAN","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6735","razon":"DIAZ CARLA ANTONELLA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6994","razon":"LEGUIZAMON VIRGINIA NOELI","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7207","razon":"GARCIA WALTER FABIAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5047","razon":"EL TOKIO VIEJO SRL","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9212","razon":"CITTADINI ESTEBAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9432","razon":"NAVAS SANSEVERINO ALFONSO","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]}],"ALFONSINA OREFICE":[{"id":"7145","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7156","razon":"GUAN YANHUA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7181","razon":"HERRERA LEANDRO ANDRES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7344","razon":"BESSONE AGUSTIN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7590","razon":"GALLO LLORENTE EMILIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7790","razon":"MARCONI OMAR NELDO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8244","razon":"GONZALEZ MARTA ALICIA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8753","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9320","razon":"GRUPO BDA S.A.","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7127","razon":"BUSTOS WALTER ALBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7132","razon":"YAN LINGXIANG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7146","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7157","razon":"LIN XIAOYAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7161","razon":"LI HONGLIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7173","razon":"ZHENG XIAOFANG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7224","razon":"CORNUCHO ANA GRACIELA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7227","razon":"YAN MINGXING","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7230","razon":"CAIONE LILIAN MARIEL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7275","razon":"LI GUOHUA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7366","razon":"HUANG SHUJUAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7673","razon":"MALIZIA OSVALDO SANTIAGO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8019","razon":"ROCCA TERESITA","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8037","razon":"ROSALES DANIEL LUJAN","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8299","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8397","razon":"CORNUCHO ANA GRACIELA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8445","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8577","razon":"PAPUK NELIDA RAQUEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8633","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8848","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9057","razon":"GALLO LLORENTE EMILIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"9145","razon":"ZHENG KAIJIE","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7701","razon":"EMPRENDIMIENTOS DON LINO GASTRO S.R.L","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8700","razon":"SOBRAL HERNAN ALEJANDRO","rubro":"","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"9000","razon":"LAURENCO MARIANO ALBERTO","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9340","razon":"MORENO JULIANA BELEN","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9395","razon":"CORNUCHO ANA GRACIELA","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]}],"SOFIA LUDOVICO":[{"id":"6930","razon":"FIGOLI SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7203","razon":"FARIAS JAVIER RAMON","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7426","razon":"MARCHESSE IGNACIO","rubro":"VINOTECAS","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7597","razon":"BIGEON JOSE LUIS","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7598","razon":"SANCHEZ ROCIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8233","razon":"CARDASCIA MICAELA","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8313","razon":"LI HONGJUAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"8474","razon":"CASA LUSARDI S. CAP I SECC IV","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8754","razon":"LONZO AGUSTIN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"2834","razon":"RODRIGUEZ JAVIER","rubro":"VINOTECAS","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8451","razon":"SANCHEZ ROCIO","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7120","razon":"NICODEMO NESTOR ROBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7622","razon":"6740 CANGUS S.R.L","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7680","razon":"MILIONE JOSE ANTONIO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7932","razon":"SANCHEZ ROCIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"8177","razon":"PESOINBOURE NATALIA VANESA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8750","razon":"NICODEMO NESTOR ROBERTO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7323","razon":"GELTOKIA SRL","rubro":"EESS","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"8419","razon":"BOTTA NICOLAS RUBEN","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9229","razon":"RODRIGUEZ ESTEBAN DANIEL","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9219","razon":"VILLALBA LAUREANO OSCAR","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"9266","razon":"CARDASCIA MICAELA SOLEDAD","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7134","razon":"FERNANDEZ ANDRES ESTEBAN","rubro":"SELF","edfs_esperados":[{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"9423","razon":"SUPERMERCADO YURNE 2026 S.R.L","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9449","razon":"PETRUCCELLI ARIEL","rubro":"","edfs_esperados":[{"tipo":"ADO","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]}]};
+
+const VENDORS = Object.keys(DATA_SEED);
+let STATE = {};
+let currentVendor = null;
+let currentClientKey = null;
+let editingEdfIdx = null;
+let isNewEdf = false;
+
+function skey(v){ return 'edf_rl_'+v; }
+
+function loadAllStates(){
+  VENDORS.forEach(v=>{
+    try{
+      const raw = localStorage.getItem(skey(v));
+      STATE[v] = raw ? JSON.parse(raw) : {clients: JSON.parse(JSON.stringify(DATA_SEED[v]))};
+    }catch(e){
+      STATE[v] = {clients: JSON.parse(JSON.stringify(DATA_SEED[v]))};
+    }
+  });
+}
+
+function saveState(v){
+  try{ localStorage.setItem(skey(v), JSON.stringify(STATE[v])); }catch(e){}
+}
+
+function clientKey(c){ return c.id || c._tmpId; }
+function getClient(v,k){ return STATE[v].clients.find(c=>clientKey(c)===k); }
+
+function initials(name){
+  return name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+}
+
+function vendorStats(v){
+  const cl = STATE[v].clients;
+  const total = cl.length;
+  const totalEdf = cl.reduce((a,c)=>a+c.edfs_esperados.length,0);
+  const done = cl.filter(c=>c.edfs && c.edfs.length >= c.edfs_esperados.length && c.edfs_esperados.length>0).length;
+  const edfDone = cl.reduce((a,c)=>a+(c.edfs?c.edfs.length:0),0);
+  return {total, totalEdf, done, edfDone, pct: total>0?Math.round(done/total*100):0};
+}
+
+// ---- SCREENS ----
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goLogin(){ showScreen('sc-login'); renderLogin(); }
+function goAdmin(){ showScreen('sc-admin'); renderAdmin(); }
+function goAdminV(v){ 
+  document.getElementById('av-title').textContent = v;
+  renderAdminVendor(v);
+  showScreen('sc-admin-v'); 
+}
+
+function goVendor(){
+  showScreen('sc-vendor');
+  document.getElementById('v-search').value='';
+  renderVendorList();
+}
+
+function goVendorById(v){
+  currentVendor = v;
+  document.getElementById('v-title').textContent = v;
+  updateVSubtitle();
+  goVendor();
+}
+
+function updateVSubtitle(){
+  const s = vendorStats(currentVendor);
+  document.getElementById('v-sub').textContent = s.done+'/'+s.total+' clientes · '+s.edfDone+'/'+s.totalEdf+' EDF';
+}
+
+function goClient(k){
+  currentClientKey = k;
+  const c = getClient(currentVendor, k);
+  document.getElementById('c-title').textContent = c.razon;
+  document.getElementById('c-sub').textContent = (c.rubro||'') + (c.id?' · ID: '+c.id:'');
+  showScreen('sc-cliente');
+  renderClientEDFs();
+}
+
+// ---- RENDER LOGIN ----
+function renderLogin(){
+  const list = document.getElementById('vendor-list');
+  list.innerHTML = VENDORS.map(v=>{
+    const s = vendorStats(v);
+    const ini = initials(v);
+    return `<button class="vendor-btn" onclick="goVendorById('${v}')">
+      <div class="vendor-avatar">${ini}</div>
+      <div class="vendor-info">
+        <div class="vendor-name">${v}</div>
+        <div class="vendor-stats">${s.done}/${s.total} clientes · ${s.edfDone}/${s.totalEdf} EDF relevados</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${s.pct}%"></div></div>
+      </div>
+      <div class="vendor-pct">${s.pct}%</div>
+    </button>`;
+  }).join('');
+}
+
+// ---- RENDER VENDOR LIST ----
+function renderVendorList(){
+  const q = (document.getElementById('v-search').value||'').toLowerCase();
+  const clients = STATE[currentVendor].clients;
+  const filtered = clients.filter(c=>
+    c.razon.toLowerCase().includes(q) ||
+    (c.id&&c.id.includes(q)) ||
+    (c.rubro&&c.rubro.toLowerCase().includes(q))
+  );
+  const pending = filtered.filter(c=>!c.edfs||c.edfs.length<c.edfs_esperados.length);
+  const done = filtered.filter(c=>c.edfs&&c.edfs.length>=c.edfs_esperados.length&&c.edfs_esperados.length>0);
+
+  let html='';
+  if(pending.length){
+    html+=`<div class="sec-label">Pendientes (${pending.length})</div>`;
+    pending.forEach(c=>{ html+=clientCardHTML(c); });
+  }
+  if(done.length){
+    html+=`<div class="sec-label" style="margin-top:${pending.length?'16px':'0'}">Completados (${done.length})</div>`;
+    done.forEach(c=>{ html+=clientCardHTML(c); });
+  }
+  if(!filtered.length) html='<div class="empty"><div class="empty-icon">🔍</div>Sin resultados para "'+q+'"</div>';
+  document.getElementById('v-client-list').innerHTML = html;
+  updateVSubtitle();
+}
+
+function clientCardHTML(c){
+  const k = clientKey(c);
+  const edfs = c.edfs||[];
+  const esp = c.edfs_esperados||[];
+  const isDone = edfs.length>=esp.length && esp.length>0;
+  const badge = isDone
+    ? `<span class="badge badge-ok">${edfs.length} EDF ✓</span>`
+    : `<span class="badge badge-pend">${edfs.length}/${esp.length} EDF</span>`;
+  const pills = esp.map((e,i)=>{
+    const filled = edfs[i];
+    if(filled) return `<span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo} ${e.puertas>1?'2p':'1p'} ✓</span>`;
+    return `<span class="pill pill-gray">${e.tipo} ${e.puertas>1?'2p':'1p'}</span>`;
+  }).join('');
+  return `<div class="client-card ${isDone?'done':'pending'}" onclick="goClient('${k}')">
+    <div class="card-top">
+      <div class="card-body">
+        <div class="card-name">${c.razon}</div>
+        <div class="card-meta">${c.rubro||'—'}</div>
+        <div class="card-id">ID: ${c.id||'Nuevo'}</div>
+      </div>
+      ${badge}
+    </div>
+    <div class="edf-pills">${pills}</div>
+  </div>`;
+}
+
+// ---- RENDER CLIENT EDFs ----
+function renderClientEDFs(){
+  const c = getClient(currentVendor, currentClientKey);
+  const edfs = c.edfs||[];
+  const esp = c.edfs_esperados||[];
+  let html='';
+
+  esp.forEach((e,i)=>{
+    const filled = edfs[i];
+    if(filled){
+      html+=`<div class="edf-esperado edf-filled">
+        <div class="edf-header">
+          <span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo}</span>
+          <span class="edf-number">Heladera ${i+1} — ${e.puertas} puerta${e.puertas>1?'s':''} — Cargada ✓</span>
+        </div>
+        <div class="edf-data-row"><span class="edf-data-label">N° Serie</span><span class="edf-data-val">${filled.serie||'—'}</span></div>
+        ${filled.activo?`<div class="edf-data-row"><span class="edf-data-label">N° Activo</span><span class="edf-data-val">${filled.activo}</span></div>`:''}
+        <div class="edf-data-row"><span class="edf-data-label">Movimiento</span><span class="edf-data-val">${filled.mov}</span></div>
+        ${filled.obs?`<div class="edf-data-row"><span class="edf-data-label">Observaciones</span><span class="edf-data-val">${filled.obs}</span></div>`:''}
+        <div class="edf-actions">
+          <button class="btn-sm btn-outline" onclick="openEditEDF(${i})">✏️ Editar</button>
+          <button class="btn-sm btn-danger-sm" onclick="deleteEDF(${i})">🗑 Borrar</button>
+        </div>
+      </div>`;
+    } else {
+      html+=`<div class="edf-esperado">
+        <div class="edf-header">
+          <span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo}</span>
+          <span class="edf-number">Heladera ${i+1} — ${e.puertas} puerta${e.puertas>1?'s':''} — Pendiente</span>
+        </div>
+        <button class="btn-sm btn-outline" style="width:100%;padding:10px" onclick="openFillEDF(${i},${e.puertas},'${e.tipo}')">+ Cargar datos de esta heladera</button>
+      </div>`;
+    }
+  });
+
+  if(edfs.length > esp.length){
+    for(let i=esp.length;i<edfs.length;i++){
+      const filled=edfs[i];
+      html+=`<div class="edf-esperado edf-filled">
+        <div class="edf-header">
+          <span class="pill pill-${filled.tipo.toLowerCase()}">${filled.tipo}</span>
+          <span class="edf-number">Heladera adicional ${i+1} ✓</span>
+        </div>
+        <div class="edf-data-row"><span class="edf-data-label">N° Serie</span><span class="edf-data-val">${filled.serie||'—'}</span></div>
+        ${filled.activo?`<div class="edf-data-row"><span class="edf-data-label">N° Activo</span><span class="edf-data-val">${filled.activo}</span></div>`:''}
+        <div class="edf-data-row"><span class="edf-data-label">Movimiento</span><span class="edf-data-val">${filled.mov}</span></div>
+        ${filled.obs?`<div class="edf-data-row"><span class="edf-data-label">Observaciones</span><span class="edf-data-val">${filled.obs}</span></div>`:''}
+        <div class="edf-actions">
+          <button class="btn-sm btn-outline" onclick="openEditEDF(${i})">✏️ Editar</button>
+          <button class="btn-sm btn-danger-sm" onclick="deleteEDF(${i})">🗑 Borrar</button>
+        </div>
+      </div>`;
+    }
+  }
+  document.getElementById('c-edf-content').innerHTML = html || '<div class="empty"><div class="empty-icon">❄️</div>Sin heladeras registradas</div>';
+}
+
+// ---- EDF MODAL ----
+function openFillEDF(idx, puertas, tipo){
+  editingEdfIdx = idx; isNewEdf = false;
+  document.getElementById('modal-edf-title').textContent = 'Cargar heladera '+(idx+1);
+  clearEDFForm();
+  setRadio('f-tipo', tipo);
+  setRadio('f-puertas', String(puertas));
+  if(tipo==='ADO') document.getElementById('row-puertas').style.display='none';
+  else document.getElementById('row-puertas').style.display='';
+  openModal('modal-edf');
+}
+
+function openEditEDF(idx){
+  editingEdfIdx = idx; isNewEdf = false;
+  const c = getClient(currentVendor, currentClientKey);
+  const e = c.edfs[idx];
+  document.getElementById('modal-edf-title').textContent = 'Editar heladera '+(idx+1);
+  clearEDFForm();
+  document.getElementById('f-serie').value = e.serie||'';
+  document.getElementById('f-activo').value = e.activo||'';
+  document.getElementById('f-obs').value = e.obs||'';
+  setRadio('f-tipo', e.tipo);
+  setRadio('f-puertas', String(e.puertas));
+  setRadio('f-mov', e.mov);
+  if(e.tipo==='ADO') document.getElementById('row-puertas').style.display='none';
+  else document.getElementById('row-puertas').style.display='';
+  openModal('modal-edf');
+}
+
+function openAddEDFModal(){
+  editingEdfIdx = null; isNewEdf = true;
+  document.getElementById('modal-edf-title').textContent = 'Agregar heladera adicional';
+  clearEDFForm();
+  document.getElementById('row-puertas').style.display='';
+  openModal('modal-edf');
+}
+
+function clearEDFForm(){
+  ['f-serie','f-activo','f-obs'].forEach(id=>document.getElementById(id).value='');
+  ['rg-tipo','rg-puertas','rg-mov'].forEach(gid=>{
+    document.querySelectorAll('#'+gid+' .radio-opt').forEach(el=>{
+      el.classList.remove('sel');
+      el.querySelector('input').checked=false;
+    });
+  });
+}
+
+function setRadio(name, val){
+  const inp = document.querySelector('input[name="'+name+'"][value="'+val+'"]');
+  if(inp){ inp.checked=true; inp.closest('.radio-opt').classList.add('sel'); }
+}
+
+document.querySelectorAll('input[name="f-tipo"]').forEach(inp=>{
+  inp.addEventListener('change',()=>{
+    document.getElementById('row-puertas').style.display = inp.value==='ADO'?'none':'';
+    if(inp.value==='ADO') setRadio('f-puertas','1');
+  });
+});
+
+function saveEDF(){
+  const serie = document.getElementById('f-serie').value.trim();
+  const tipo = document.querySelector('input[name="f-tipo"]:checked');
+  const puertas = document.querySelector('input[name="f-puertas"]:checked');
+  const mov = document.querySelector('input[name="f-mov"]:checked');
+  if(!serie){ alert('El número de serie es obligatorio.'); return; }
+  if(!tipo){ alert('Seleccioná el tipo (CCU o ADO).'); return; }
+  if(!puertas && tipo.value!=='ADO'){ alert('Indicá la cantidad de puertas.'); return; }
+  if(!mov){ alert('Seleccioná el movimiento.'); return; }
+  const edf = {
+    serie,
+    activo: document.getElementById('f-activo').value.trim(),
+    tipo: tipo.value,
+    puertas: puertas ? parseInt(puertas.value) : 1,
+    mov: mov.value,
+    obs: document.getElementById('f-obs').value.trim()
+  };
+  const c = getClient(currentVendor, currentClientKey);
+  if(!c.edfs) c.edfs=[];
+  if(isNewEdf){ c.edfs.push(edf); }
+  else { c.edfs[editingEdfIdx] = edf; }
+  saveState(currentVendor);
+  closeModal();
+  renderClientEDFs();
+  renderVendorList();
+  toast(isNewEdf?'Heladera agregada ✓':'Heladera actualizada ✓');
+}
+
+function deleteEDF(idx){
+  if(!confirm('¿Borrar los datos de esta heladera?')) return;
+  const c = getClient(currentVendor, currentClientKey);
+  c.edfs.splice(idx,1);
+  saveState(currentVendor);
+  renderClientEDFs();
+  renderVendorList();
+  toast('Heladera eliminada');
+}
+
+// ---- NUEVO CLIENTE ----
+function openNuevoClienteModal(){
+  ['nc-id','nc-razon','nc-rubro'].forEach(id=>document.getElementById(id).value='');
+  openModal('modal-nuevo');
+}
+
+function saveNuevoCliente(){
+  const razon = document.getElementById('nc-razon').value.trim();
+  if(!razon){ alert('La razón social es obligatoria.'); return; }
+  const tmpId = 'TMP'+Date.now();
+  STATE[currentVendor].clients.push({
+    _tmpId: tmpId,
+    id: document.getElementById('nc-id').value.trim()||null,
+    razon,
+    rubro: document.getElementById('nc-rubro').value.trim(),
+    edfs_esperados:[],
+    edfs:[],
+    _nuevo: true
+  });
+  saveState(currentVendor);
+  closeModal();
+  renderVendorList();
+  toast('Cliente agregado');
+}
+
+// ---- ADMIN ----
+function renderAdmin(){
+  let totalCli=0,totalEdf=0,totalDoneEdf=0,totalDoneCli=0;
+  VENDORS.forEach(v=>{
+    const s=vendorStats(v);
+    totalCli+=s.total; totalEdf+=s.totalEdf; totalDoneEdf+=s.edfDone; totalDoneCli+=s.done;
+  });
+  document.getElementById('admin-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-n">${totalCli}</div><div class="stat-l">Clientes totales</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:#0F6E56">${totalDoneCli}</div><div class="stat-l">Clientes completados</div></div>
+    <div class="stat-card"><div class="stat-n">${totalEdf}</div><div class="stat-l">EDF esperados</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:#533AB7">${totalDoneEdf}</div><div class="stat-l">EDF relevados</div></div>
+  `;
+  document.getElementById('admin-vendors').innerHTML = VENDORS.map(v=>{
+    const s=vendorStats(v);
+    return `<div class="vendor-btn" onclick="goAdminV('${v}')" style="cursor:pointer">
+      <div class="vendor-avatar">${initials(v)}</div>
+      <div class="vendor-info">
+        <div class="vendor-name">${v}</div>
+        <div class="vendor-stats">${s.done}/${s.total} clientes · ${s.edfDone}/${s.totalEdf} EDF</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${s.pct}%"></div></div>
+      </div>
+      <div class="vendor-pct">${s.pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+function renderAdminVendor(v){
+  const clients = STATE[v].clients;
+  let html='';
+  clients.forEach(c=>{
+    const edfs=c.edfs||[];
+    const esp=c.edfs_esperados||[];
+    const done=edfs.length>=esp.length&&esp.length>0;
+    html+=`<div class="client-card ${done?'done':'pending'}" style="cursor:default">
+      <div class="card-top">
+        <div class="card-body">
+          <div class="card-name">${c.razon}</div>
+          <div class="card-meta">${c.rubro||'—'} · ID: ${c.id||'Nuevo'}</div>
+        </div>
+        <span class="badge ${done?'badge-ok':'badge-pend'}">${edfs.length}/${esp.length}</span>
+      </div>
+      ${edfs.length>0?`<div class="edf-pills">${edfs.map(e=>`<span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo} · ${e.serie||'?'} · ${e.mov}</span>`).join('')}</div>`:''}
+    </div>`;
+  });
+  document.getElementById('av-content').innerHTML = html||'<div class="empty">Sin datos</div>';
+}
+
+function exportExcel(){
+  const rows=[['Vendedor','ID Cliente','Razón Social','Rubro','Cliente Nuevo','N° Serie','N° Activo','Tipo EDF','Puertas','Movimiento','Observaciones']];
+  VENDORS.forEach(v=>{
+    STATE[v].clients.forEach(c=>{
+      const edfs=c.edfs||[];
+      const esp=c.edfs_esperados||[];
+      if(edfs.length===0){
+        rows.push([v,c.id||'',c.razon,c.rubro||'',c._nuevo?'Sí':'No','','','','','','']);
+      } else {
+        edfs.forEach(e=>{
+          rows.push([v,c.id||'',c.razon,c.rubro||'',c._nuevo?'Sí':'No',e.serie||'',e.activo||'',e.tipo,e.puertas,e.mov,e.obs||'']);
+        });
+      }
+    });
+  });
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:18},{wch:10},{wch:28},{wch:14},{wch:12},{wch:14},{wch:12},{wch:8},{wch:7},{wch:14},{wch:26}];
+  XLSX.utils.book_append_sheet(wb,ws,'Relevamiento EDF');
+  XLSX.writeFile(wb,'relevamiento_edf_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  toast('Excel descargado ✓');
+}
+
+// ---- MODAL UTILS ----
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(){ document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open')); }
+function selRG(gid,el){
+  document.querySelectorAll('#'+gid+' .radio-opt').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');
+}
+document.querySelectorAll('.modal-bg').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) closeModal(); });
+});
+
+// ---- TOAST ----
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._to);
+  t._to=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// INIT
+loadAllStates();
+renderLogin();
+</script>
+</body>
+</html>
