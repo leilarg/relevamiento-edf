@@ -630,7 +630,7 @@ function saveNuevoCliente(){
   const razon = document.getElementById('nc-razon').value.trim();
   if(!razon){ alert('La razón social es obligatoria.'); return; }
   const tmpId = 'TMP'+Date.now();
-  STATE[currentVendor].clients.push({
+  const nuevoCliente = {
     _tmpId: tmpId,
     id: document.getElementById('nc-id').value.trim()||null,
     razon,
@@ -638,11 +638,14 @@ function saveNuevoCliente(){
     edfs_esperados:[],
     edfs:[],
     _nuevo: true
-  });
+  };
+  STATE[currentVendor].clients.push(nuevoCliente);
   saveState(currentVendor);
   closeModal();
   renderVendorList();
   toast('Cliente agregado');
+  // Ir directo al cliente para cargar la primera heladera
+  setTimeout(()=>{ goClient(tmpId); }, 200);
 }
 
 // ---- ADMIN ----
