@@ -471,6 +471,11 @@ function renderClientEDFs(){
   const esp = c.edfs_esperados||[];
   let html='';
 
+  // Si es cliente nuevo sin heladeras esperadas y sin nada cargado, abrir form directo
+  if(esp.length===0 && edfs.length===0){
+    setTimeout(()=>openAddEDFModal(), 100);
+  }
+
   esp.forEach((e,i)=>{
     const filled = edfs[i];
     if(filled){
