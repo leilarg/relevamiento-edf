@@ -6,68 +6,27 @@
 <title>EDF — MARINA COLLAZO</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#F8F7F4;--surface:#FFFFFF;--border:#E5E2DA;--border2:#CCCAB8;
-  --text:#1A1A18;--text2:#6B6960;--text3:#A09D94;
-  --purple:#533AB7;--purple-bg:#EEEDFE;--purple-text:#3C3489;
-  --green-bg:#E1F5EE;--green-text:#0F6E56;
-  --amber-bg:#FAEEDA;--amber-text:#854F0B;
-  --blue-bg:#E6F1FB;--blue-text:#0C447C;
-  --red:#E24B4A;--radius:12px;--radius-sm:8px;
-}
+:root{--bg:#F8F7F4;--surface:#FFF;--border:#E5E2DA;--border2:#CCCAB8;--text:#1A1A18;--text2:#6B6960;--text3:#A09D94;--purple:#533AB7;--purple-bg:#EEEDFE;--purple-text:#3C3489;--green-bg:#E1F5EE;--green-text:#0F6E56;--amber-bg:#FAEEDA;--amber-text:#854F0B;--blue-bg:#E6F1FB;--blue-text:#0C447C;--red:#E24B4A;--radius:12px}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px}
-.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg)}
-.screen{display:none;min-height:100vh}
-.screen.active{display:flex;flex-direction:column}
-
-/* TOPBAR */
+.app{max-width:430px;margin:0 auto;min-height:100vh}
+.screen{display:none;flex-direction:column;min-height:100vh}
+.screen.active{display:flex}
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 16px 12px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
-.topbar-back{background:none;border:none;cursor:pointer;color:var(--text2);font-size:20px;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
-.topbar-back:active{background:var(--bg)}
+.topbar-back{background:none;border:none;cursor:pointer;color:var(--text2);font-size:22px;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
 .topbar-info{flex:1;min-width:0}
 .topbar-title{font-size:16px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbar-sub{font-size:12px;color:var(--text2);margin-top:1px}
-.topbar-action{background:none;border:1px solid var(--border2);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap}
-.topbar-action:active{background:var(--bg)}
-
-/* SCROLL CONTENT */
-.content{flex:1;overflow-y:auto;padding:16px}
-
-/* LOGIN */
-.login-hero{padding:28px 20px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
-.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.login-logo-icon{width:36px;height:36px;background:var(--purple);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
-.login-logo-text{font-size:20px;font-weight:700;color:var(--text)}
-.login-sub{font-size:13px;color:var(--text2)}
-.login-section{padding:16px}
-.login-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
-.vendor-btn{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px}
-.vendor-btn:active{background:var(--bg)}
-.vendor-avatar{width:38px;height:38px;border-radius:50%;background:var(--purple-bg);color:var(--purple-text);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.vendor-info{flex:1;min-width:0}
-.vendor-name{font-size:14px;font-weight:600;color:var(--text)}
-.vendor-stats{font-size:12px;color:var(--text2);margin-top:2px}
-.vendor-pct{font-size:13px;font-weight:600;color:var(--text2)}
-.progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
-.progress-fill{height:100%;background:var(--purple);border-radius:2px;transition:width .3s}
-.admin-btn{width:100%;background:none;border:1px solid var(--border2);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--text2);font-size:14px;font-weight:500}
-.admin-btn:active{background:var(--border)}
-
-/* SEARCH */
+.topbar-btn{background:none;border:1px solid var(--border2);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer}
+.content{flex:1;padding:16px;overflow-y:auto}
 .search-wrap{position:relative;margin-bottom:12px}
 .search-wrap input{width:100%;padding:10px 14px 10px 38px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);outline:none}
 .search-wrap input:focus{border-color:var(--purple)}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;pointer-events:none}
-
-/* SECTION LABELS */
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
 .sec-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin:14px 0 8px}
 .sec-label:first-child{margin-top:0}
-
-/* CLIENT CARDS */
-.client-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px;cursor:pointer;active:background:var(--bg)}
+.client-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--border2);border-radius:var(--radius);padding:14px;margin-bottom:8px;cursor:pointer}
 .client-card:active{background:var(--bg)}
-.client-card.done{border-left:3px solid #1D9E75}
-.client-card.pending{border-left:3px solid var(--border2)}
+.client-card.done{border-left-color:#1D9E75}
 .card-top{display:flex;align-items:flex-start;gap:8px}
 .card-body{flex:1;min-width:0}
 .card-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
@@ -76,231 +35,132 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0}
 .badge-ok{background:var(--green-bg);color:var(--green-text)}
 .badge-pend{background:var(--amber-bg);color:var(--amber-text)}
-.badge-new{background:var(--purple-bg);color:var(--purple-text)}
 .edf-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
 .pill{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
 .pill-ccu{background:var(--blue-bg);color:var(--blue-text)}
 .pill-ado{background:var(--green-bg);color:var(--green-text)}
 .pill-gray{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
-
-/* EDF DETAIL SCREEN */
-.edf-esperado{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.edf-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.edf-number{font-size:13px;font-weight:600;color:var(--text2)}
-.edf-filled{background:#F0FBF6;border-color:#A8DFC7}
-.edf-filled .edf-number{color:var(--green-text)}
-.edf-data-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--bg)}
-.edf-data-row:last-child{border-bottom:none}
-.edf-data-label{color:var(--text2)}
-.edf-data-val{font-weight:500;color:var(--text)}
-.edf-actions{display:flex;gap:8px;margin-top:10px}
-.btn-sm{flex:1;padding:8px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;text-align:center}
-.btn-outline{background:none;border:1px solid var(--border2);color:var(--text)}
-.btn-outline:active{background:var(--bg)}
-.btn-danger-sm{background:none;border:1px solid var(--red);color:var(--red)}
-.extra-edf-note{font-size:12px;color:var(--text3);text-align:center;padding:12px;background:var(--bg);border-radius:8px;margin-bottom:10px}
-
-/* FAB */
+.edf-card{border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;background:var(--surface)}
+.edf-card.filled{background:#F0FBF6;border-color:#A8DFC7}
+.edf-card-title{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;font-weight:600;color:var(--text2)}
+.edf-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--bg)}
+.edf-row:last-child{border-bottom:none}
+.edf-row-label{color:var(--text2)}
+.edf-row-val{font-weight:500}
+.edf-btns{display:flex;gap:8px;margin-top:10px}
+.btn-sm{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;text-align:center;border:1px solid var(--border2);background:none;color:var(--text)}
+.btn-sm:active{background:var(--bg)}
+.btn-sm-red{border-color:var(--red);color:var(--red)}
 .fab-wrap{padding:12px 16px;background:var(--bg);border-top:1px solid var(--border);position:sticky;bottom:0}
 .fab{width:100%;padding:14px;background:var(--purple);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer}
-.fab:active{opacity:.9}
-.fab-outline{background:var(--surface);color:var(--text);border:1px solid var(--border2)}
-
-/* MODAL */
+.fab-out{background:var(--surface);color:var(--text);border:1px solid var(--border2)}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center}
 .modal-bg.open{display:flex}
-.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto}
-.modal-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:16px}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px 36px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto}
 .modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
-
-/* FORMS */
+.modal-title{font-size:17px;font-weight:700;margin-bottom:16px}
 .form-row{margin-bottom:14px}
 .form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
 .form-row input,.form-row select,.form-row textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;font-size:15px;color:var(--text);outline:none}
-.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--purple);background:var(--surface)}
+.form-row input:focus,.form-row textarea:focus{border-color:var(--purple);background:var(--surface)}
 .form-row textarea{height:70px;resize:none}
-.radio-group{display:flex;gap:8px;flex-wrap:wrap}
-.radio-opt{display:flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--border2);border-radius:10px;cursor:pointer;font-size:14px;color:var(--text);background:var(--bg)}
-.radio-opt input{width:auto;margin:0;accent-color:var(--purple)}
-.radio-opt.sel{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-text);font-weight:500}
+.rg{display:flex;gap:8px;flex-wrap:wrap}
+.ro{display:flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--border2);border-radius:10px;cursor:pointer;font-size:14px;background:var(--bg)}
+.ro input{width:auto;margin:0;accent-color:var(--purple)}
+.ro.sel{background:var(--purple-bg);border-color:var(--purple);color:var(--purple-text);font-weight:500}
 .btn-row{display:flex;gap:10px;margin-top:16px}
-.btn-cancel{flex:1;padding:13px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;color:var(--text)}
+.btn-cancel{flex:1;padding:13px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;font-size:15px;font-weight:500;cursor:pointer}
 .btn-save{flex:1;padding:13px;background:var(--purple);border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;color:#fff}
-.btn-save:active,.btn-cancel:active{opacity:.85}
-
-/* ADMIN */
-.stats-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
-.stat-n{font-size:26px;font-weight:700;color:var(--text)}
-.stat-l{font-size:12px;color:var(--text2);margin-top:3px}
-
-/* TOAST */
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#1A1A18;color:#fff;font-size:13px;font-weight:500;padding:10px 20px;border-radius:20px;z-index:200;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* EMPTY */
 .empty{text-align:center;padding:40px 20px;color:var(--text2);font-size:14px}
-.empty-icon{font-size:36px;margin-bottom:10px}
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- LOGIN -->
-<div class="screen active" id="sc-login">
-  <div class="login-hero">
-    <div class="login-logo">
-      <div class="login-logo-icon">❄</div>
-      <div class="login-logo-text">Relevamiento EDF</div>
-    </div>
-    <div class="login-sub">Seleccioná tu nombre para continuar</div>
-  </div>
-  <div class="login-section">
-    <div class="login-label">Vendedores</div>
-    <div id="vendor-list"></div>
-    <div style="display:none"><button class="admin-btn" onclick="goAdmin()">
-        <span>🔐</span> Acceso administrador
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- VENDOR LIST -->
-<div class="screen" id="sc-vendor">
+<div class="screen active" id="sc-lista">
   <div class="topbar">
     <div class="topbar-info">
-      <div class="topbar-title" id="v-title">—</div>
-      <div class="topbar-sub" id="v-sub">—</div>
+      <div class="topbar-title">MARINA COLLAZO</div>
+      <div class="topbar-sub" id="sub-progress">Cargando...</div>
     </div>
-    <button class="topbar-action" onclick="goLogin()">Salir</button>
+    <button class="topbar-btn" onclick="location.reload()">↺</button>
   </div>
-  <div class="content" style="padding-bottom:0">
+  <div class="content">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input type="text" id="v-search" placeholder="Buscar cliente o ID..." oninput="renderVendorList()">
+      <input type="text" id="buscador" placeholder="Buscar cliente o ID..." oninput="renderLista()">
     </div>
-    <div id="v-client-list"></div>
-    <div style="height:16px"></div>
+    <div id="lista"></div>
   </div>
   <div class="fab-wrap">
-    <button class="fab fab-outline" onclick="openNuevoClienteModal()">+ Agregar cliente no listado</button>
+    <button class="fab fab-out" onclick="abrirModalNuevo()">+ Agregar cliente no listado</button>
   </div>
 </div>
 
-<!-- CLIENT EDF SCREEN -->
 <div class="screen" id="sc-cliente">
   <div class="topbar">
-    <button class="topbar-back" onclick="goVendor()">←</button>
+    <button class="topbar-back" onclick="volverLista()">←</button>
     <div class="topbar-info">
-      <div class="topbar-title" id="c-title">—</div>
+      <div class="topbar-title" id="c-nombre">—</div>
       <div class="topbar-sub" id="c-sub">—</div>
     </div>
   </div>
-  <div class="content" style="padding-bottom:0">
-    <div id="c-edf-content"></div>
-    <div style="height:16px"></div>
+  <div class="content">
+    <div id="c-edfs"></div>
   </div>
   <div class="fab-wrap">
-    <button class="fab" onclick="openAddEDFModal()">+ Agregar heladera adicional</button>
+    <button class="fab" onclick="abrirModalEDF(null)">+ Agregar heladera</button>
   </div>
 </div>
 
-<!-- ADMIN -->
-<div class="screen" id="sc-admin">
-  <div class="topbar">
-    <button class="topbar-back" onclick="goLogin()">←</button>
-    <div class="topbar-info">
-      <div class="topbar-title">Panel administrador</div>
-    </div>
-    <button class="topbar-action" onclick="exportExcel()">📥 Excel</button>
-  </div>
-  <div class="content">
-    <div class="stats-row" id="admin-stats"></div>
-    <div class="sec-label">Avance por vendedor</div>
-    <div id="admin-vendors"></div>
-  </div>
 </div>
 
-<!-- ADMIN VENDOR DETAIL -->
-<div class="screen" id="sc-admin-v">
-  <div class="topbar">
-    <button class="topbar-back" onclick="goAdmin()">←</button>
-    <div class="topbar-info">
-      <div class="topbar-title" id="av-title">—</div>
-    </div>
-  </div>
-  <div class="content" id="av-content"></div>
-</div>
-
-</div><!-- .app -->
-
-<!-- MODAL EDF FORM -->
 <div class="modal-bg" id="modal-edf">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-edf-title">Cargar heladera</div>
-    <div class="form-row">
-      <label class="form-label">N° de Serie *</label>
-      <input type="text" id="f-serie" placeholder="Ej: EDF-00234" autocomplete="off">
-    </div>
-    <div class="form-row">
-      <label class="form-label">N° de Activo (opcional)</label>
-      <input type="text" id="f-activo" placeholder="Dejar vacío si no tiene">
-    </div>
-    <div class="form-row">
-      <label class="form-label">Tipo EDF</label>
-      <div class="radio-group" id="rg-tipo">
-        <label class="radio-opt" onclick="selRG('rg-tipo',this)"><input type="radio" name="f-tipo" value="CCU"> CCU — Cervezas</label>
-        <label class="radio-opt" onclick="selRG('rg-tipo',this)"><input type="radio" name="f-tipo" value="ADO"> ADO — Aguas</label>
+    <div class="modal-title" id="modal-edf-titulo">Cargar heladera</div>
+    <div class="form-row"><label class="form-label">N° de Serie *</label><input type="text" id="f-serie" placeholder="Ej: EDF-00234" autocomplete="off"></div>
+    <div class="form-row"><label class="form-label">N° de Activo (opcional)</label><input type="text" id="f-activo" placeholder="Dejar vacío si no tiene"></div>
+    <div class="form-row"><label class="form-label">Tipo EDF *</label>
+      <div class="rg" id="rg-tipo">
+        <label class="ro" onclick="selRG(this,'rg-tipo')"><input type="radio" name="f-tipo" value="CCU"> CCU — Cervezas</label>
+        <label class="ro" onclick="selRG(this,'rg-tipo')"><input type="radio" name="f-tipo" value="ADO"> ADO — Aguas</label>
       </div>
     </div>
-    <div class="form-row" id="row-puertas">
-      <label class="form-label">Puertas</label>
-      <div class="radio-group" id="rg-puertas">
-        <label class="radio-opt" onclick="selRG('rg-puertas',this)"><input type="radio" name="f-puertas" value="1"> 1 puerta</label>
-        <label class="radio-opt" onclick="selRG('rg-puertas',this)"><input type="radio" name="f-puertas" value="2"> 2 puertas</label>
+    <div class="form-row" id="row-puertas"><label class="form-label">Puertas *</label>
+      <div class="rg" id="rg-puertas">
+        <label class="ro" onclick="selRG(this,'rg-puertas')"><input type="radio" name="f-puertas" value="1"> 1 puerta</label>
+        <label class="ro" onclick="selRG(this,'rg-puertas')"><input type="radio" name="f-puertas" value="2"> 2 puertas</label>
       </div>
     </div>
-    <div class="form-row">
-      <label class="form-label">Movimiento *</label>
-      <div class="radio-group" id="rg-mov">
-        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="Instalacion"> Instalación</label>
-        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="Retiro"> Retiro</label>
-        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="Baja"> Baja</label>
-        <label class="radio-opt" onclick="selRG('rg-mov',this)"><input type="radio" name="f-mov" value="No Gestionable"> No Gestionable</label>
+    <div class="form-row"><label class="form-label">Movimiento *</label>
+      <div class="rg" id="rg-mov">
+        <label class="ro" onclick="selRG(this,'rg-mov')"><input type="radio" name="f-mov" value="Instalacion"> Instalación</label>
+        <label class="ro" onclick="selRG(this,'rg-mov')"><input type="radio" name="f-mov" value="Retiro"> Retiro</label>
+        <label class="ro" onclick="selRG(this,'rg-mov')"><input type="radio" name="f-mov" value="Baja"> Baja</label>
+        <label class="ro" onclick="selRG(this,'rg-mov')"><input type="radio" name="f-mov" value="No Gestionable"> No Gestionable</label>
       </div>
     </div>
-    <div class="form-row">
-      <label class="form-label">Observaciones</label>
-      <textarea id="f-obs" placeholder="Estado, roturas, novedades..."></textarea>
-    </div>
+    <div class="form-row"><label class="form-label">Observaciones</label><textarea id="f-obs" placeholder="Estado, roturas, novedades..."></textarea></div>
     <div class="btn-row">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-save" onclick="saveEDF()">Guardar ✓</button>
+      <button class="btn-cancel" onclick="cerrarModales()">Cancelar</button>
+      <button class="btn-save" onclick="guardarEDF()">Guardar ✓</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL NUEVO CLIENTE -->
 <div class="modal-bg" id="modal-nuevo">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Agregar cliente no listado</div>
-    <div class="form-row">
-      <label class="form-label">ID Cliente (si lo tenés)</label>
-      <input type="text" id="nc-id" placeholder="Opcional">
-    </div>
-    <div class="form-row">
-      <label class="form-label">Razón Social *</label>
-      <input type="text" id="nc-razon" placeholder="Nombre del negocio">
-    </div>
-    <div class="form-row">
-      <label class="form-label">Rubro</label>
-      <input type="text" id="nc-rubro" placeholder="Almacén, kiosco, restaurante...">
-    </div>
+    <div class="form-row"><label class="form-label">ID Cliente (opcional)</label><input type="text" id="nc-id" placeholder="Si lo tenés"></div>
+    <div class="form-row"><label class="form-label">Razón Social *</label><input type="text" id="nc-razon" placeholder="Nombre del negocio"></div>
+    <div class="form-row"><label class="form-label">Rubro</label><input type="text" id="nc-rubro" placeholder="Almacén, kiosco, restaurante..."></div>
     <div class="btn-row">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-save" onclick="saveNuevoCliente()">Agregar</button>
+      <button class="btn-cancel" onclick="cerrarModales()">Cancelar</button>
+      <button class="btn-save" onclick="guardarNuevoCliente()">Agregar →</button>
     </div>
   </div>
 </div>
@@ -309,290 +169,244 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const DATA_SEED = {"MARINA COLLAZO":[{"id":"345","razon":"COOP.AGROP.DE S.A.ARECO LTDA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"1171","razon":"WANG XIUYAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"3589","razon":"ARECO RUGBY CLUB","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":2}],"edfs":[]},{"id":"3637","razon":"CHEN QING","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4446","razon":"CHEN FANGJIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5439","razon":"BISOGNO MARTIN","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5884","razon":"CHEN QU","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}],"edfs":[]},{"id":"5991","razon":"CLUB ATLETICO RIVER PLATE","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6540","razon":"DOLEZOR ANAHI ROCIO","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7074","razon":"SOLVEYRA JOSE MARIA","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7167","razon":"SUPER CAMPEON SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8796","razon":"CARDENAS ALEXIS EZEQUIEL","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8282","razon":"YAN LIANGSONG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"8739","razon":"ALVAREZ MARIO ALBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"4647","razon":"BRITES FLAVIA MARIANGELES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6069","razon":"DON CARMELO ALIMENTOS CONGELADOS","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6204","razon":"PUNTE GASTON LUIS","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6309","razon":"GRAMUGLIA JUAN SEBASTIAN","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6735","razon":"DIAZ CARLA ANTONELLA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"6994","razon":"LEGUIZAMON VIRGINIA NOELI","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"7207","razon":"GARCIA WALTER FABIAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"5047","razon":"EL TOKIO VIEJO SRL","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9212","razon":"CITTADINI ESTEBAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}],"edfs":[]},{"id":"9432","razon":"NAVAS SANSEVERINO ALFONSO","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}],"edfs":[]}]};
+const VENDOR = "MARINA COLLAZO";
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzy-dvwJwWIhfjwNx4dUH3yLnCXMEvQKkV_9qV-PA_zATyNMZWRcOG9T9TP709jbE4S/exec";
+const STORAGE_KEY = 'edf_v3_' + VENDOR.replace(/\s+/g,'_');
 
-const VENDORS = Object.keys(DATA_SEED);
-let STATE = {};
-let currentVendor = null;
-let currentClientKey = null;
-let editingEdfIdx = null;
-let isNewEdf = false;
+// Seed data — lista base de clientes
+const SEED = [{"id":"345","razon":"COOP.AGROP.DE S.A.ARECO LTDA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"1171","razon":"WANG XIUYAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"3589","razon":"ARECO RUGBY CLUB","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"3637","razon":"CHEN QING","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4446","razon":"CHEN FANGJIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5439","razon":"BISOGNO MARTIN","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5884","razon":"CHEN QU","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"5991","razon":"CLUB ATLETICO RIVER PLATE","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6540","razon":"DOLEZOR ANAHI ROCIO","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"7074","razon":"SOLVEYRA JOSE MARIA","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7167","razon":"SUPER CAMPEON SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8796","razon":"CARDENAS ALEXIS EZEQUIEL","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8282","razon":"YAN LIANGSONG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8739","razon":"ALVAREZ MARIO ALBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4647","razon":"BRITES FLAVIA MARIANGELES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6069","razon":"DON CARMELO ALIMENTOS CONGELADOS","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6204","razon":"PUNTE GASTON LUIS","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6309","razon":"GRAMUGLIA JUAN SEBASTIAN","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6735","razon":"DIAZ CARLA ANTONELLA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6994","razon":"LEGUIZAMON VIRGINIA NOELI","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7207","razon":"GARCIA WALTER FABIAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5047","razon":"EL TOKIO VIEJO SRL","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"9212","razon":"CITTADINI ESTEBAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9432","razon":"NAVAS SANSEVERINO ALFONSO","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]}];
 
-function skey(v){ return 'edf_rl_'+v; }
+// Estado en memoria — indice numerico para evitar bugs de keys
+let clientes = [];
+let clienteIdx = null; // indice del cliente activo
+let edfEditIdx = null; // indice del edf que se edita (null = nuevo)
 
-function loadAllStates(){
-  VENDORS.forEach(v=>{
-    try{
-      const raw = localStorage.getItem(skey(v));
-      STATE[v] = raw ? JSON.parse(raw) : {clients: JSON.parse(JSON.stringify(DATA_SEED[v]))};
-    }catch(e){
-      STATE[v] = {clients: JSON.parse(JSON.stringify(DATA_SEED[v]))};
-    }
-  });
-}
-
-function saveState(v){
-  try{ localStorage.setItem(skey(v), JSON.stringify(STATE[v])); }catch(e){}
-}
-
-function clientKey(c){ return c.id || c._tmpId; }
-function getClient(v,k){ return STATE[v].clients.find(c=>clientKey(c)===k); }
-
-function initials(name){
-  return name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
-}
-
-function vendorStats(v){
-  const cl = STATE[v].clients;
-  const total = cl.length;
-  const totalEdf = cl.reduce((a,c)=>a+c.edfs_esperados.length,0);
-  const done = cl.filter(c=>c.edfs && c.edfs.length >= c.edfs_esperados.length && c.edfs_esperados.length>0).length;
-  const edfDone = cl.reduce((a,c)=>a+(c.edfs?c.edfs.length:0),0);
-  return {total, totalEdf, done, edfDone, pct: total>0?Math.round(done/total*100):0};
-}
-
-// ---- SCREENS ----
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
-
-function goLogin(){ showScreen('sc-login'); renderLogin(); }
-function goAdmin(){ showScreen('sc-admin'); renderAdmin(); }
-function goAdminV(v){ 
-  document.getElementById('av-title').textContent = v;
-  renderAdminVendor(v);
-  showScreen('sc-admin-v'); 
-}
-
-function goVendor(){
-  showScreen('sc-vendor');
-  document.getElementById('v-search').value='';
-  renderVendorList();
-}
-
-function goVendorById(v){
-  currentVendor = v;
-  document.getElementById('v-title').textContent = v;
-  updateVSubtitle();
-  goVendor();
-}
-
-function updateVSubtitle(){
-  const s = vendorStats(currentVendor);
-  document.getElementById('v-sub').textContent = s.done+'/'+s.total+' clientes · '+s.edfDone+'/'+s.totalEdf+' EDF';
-}
-
-function goClient(k){
-  currentClientKey = k;
-  const c = getClient(currentVendor, k);
-  document.getElementById('c-title').textContent = c.razon;
-  document.getElementById('c-sub').textContent = (c.rubro||'') + (c.id?' · ID: '+c.id:'');
-  showScreen('sc-cliente');
-  renderClientEDFs();
-}
-
-// ---- RENDER LOGIN ----
-function renderLogin(){
-  const list = document.getElementById('vendor-list');
-  list.innerHTML = VENDORS.map(v=>{
-    const s = vendorStats(v);
-    const ini = initials(v);
-    return `<button class="vendor-btn" onclick="goVendorById('${v}')">
-      <div class="vendor-avatar">${ini}</div>
-      <div class="vendor-info">
-        <div class="vendor-name">${v}</div>
-        <div class="vendor-stats">${s.done}/${s.total} clientes · ${s.edfDone}/${s.totalEdf} EDF relevados</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${s.pct}%"></div></div>
-      </div>
-      <div class="vendor-pct">${s.pct}%</div>
-    </button>`;
-  }).join('');
-}
-
-// ---- RENDER VENDOR LIST ----
-function renderVendorList(){
-  const q = (document.getElementById('v-search').value||'').toLowerCase();
-  const clients = STATE[currentVendor].clients;
-  const filtered = clients.filter(c=>
-    c.razon.toLowerCase().includes(q) ||
-    (c.id&&c.id.includes(q)) ||
-    (c.rubro&&c.rubro.toLowerCase().includes(q))
-  );
-  const pending = filtered.filter(c=>!c.edfs||c.edfs.length<c.edfs_esperados.length);
-  const done = filtered.filter(c=>c.edfs&&c.edfs.length>=c.edfs_esperados.length&&c.edfs_esperados.length>0);
-
-  let html='';
-  if(pending.length){
-    html+=`<div class="sec-label">Pendientes (${pending.length})</div>`;
-    pending.forEach(c=>{ html+=clientCardHTML(c); });
-  }
-  if(done.length){
-    html+=`<div class="sec-label" style="margin-top:${pending.length?'16px':'0'}">Completados (${done.length})</div>`;
-    done.forEach(c=>{ html+=clientCardHTML(c); });
-  }
-  if(!filtered.length) html='<div class="empty"><div class="empty-icon">🔍</div>Sin resultados para "'+q+'"</div>';
-  document.getElementById('v-client-list').innerHTML = html;
-  updateVSubtitle();
-}
-
-function clientCardHTML(c){
-  const k = clientKey(c);
-  const edfs = c.edfs||[];
-  const esp = c.edfs_esperados||[];
-  const isDone = edfs.length>=esp.length && esp.length>0;
-  const badge = isDone
-    ? `<span class="badge badge-ok">${edfs.length} EDF ✓</span>`
-    : `<span class="badge badge-pend">${edfs.length}/${esp.length} EDF</span>`;
-  const pills = esp.map((e,i)=>{
-    const filled = edfs[i];
-    if(filled) return `<span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo} ${e.puertas>1?'2p':'1p'} ✓</span>`;
-    return `<span class="pill pill-gray">${e.tipo} ${e.puertas>1?'2p':'1p'}</span>`;
-  }).join('');
-  return `<div class="client-card ${isDone?'done':'pending'}" onclick="goClient('${k}')">
-    <div class="card-top">
-      <div class="card-body">
-        <div class="card-name">${c.razon}</div>
-        <div class="card-meta">${c.rubro||'—'}</div>
-        <div class="card-id">ID: ${c.id||'Nuevo'}</div>
-      </div>
-      ${badge}
-    </div>
-    <div class="edf-pills">${pills}</div>
-  </div>`;
-}
-
-// ---- RENDER CLIENT EDFs ----
-function renderClientEDFs(){
-  const c = getClient(currentVendor, currentClientKey);
-  const edfs = c.edfs||[];
-  const esp = c.edfs_esperados||[];
-  let html='';
-
-  // Si es cliente nuevo sin heladeras esperadas y sin nada cargado, abrir form directo
-  if(esp.length===0 && edfs.length===0){
-    setTimeout(()=>openAddEDFModal(), 100);
-  }
-
-  esp.forEach((e,i)=>{
-    const filled = edfs[i];
-    if(filled){
-      html+=`<div class="edf-esperado edf-filled">
-        <div class="edf-header">
-          <span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo}</span>
-          <span class="edf-number">Heladera ${i+1} — ${e.puertas} puerta${e.puertas>1?'s':''} — Cargada ✓</span>
-        </div>
-        <div class="edf-data-row"><span class="edf-data-label">N° Serie</span><span class="edf-data-val">${filled.serie||'—'}</span></div>
-        ${filled.activo?`<div class="edf-data-row"><span class="edf-data-label">N° Activo</span><span class="edf-data-val">${filled.activo}</span></div>`:''}
-        <div class="edf-data-row"><span class="edf-data-label">Movimiento</span><span class="edf-data-val">${filled.mov}</span></div>
-        ${filled.obs?`<div class="edf-data-row"><span class="edf-data-label">Observaciones</span><span class="edf-data-val">${filled.obs}</span></div>`:''}
-        <div class="edf-actions">
-          <button class="btn-sm btn-outline" onclick="openEditEDF(${i})">✏️ Editar</button>
-          <button class="btn-sm btn-danger-sm" onclick="deleteEDF(${i})">🗑 Borrar</button>
-        </div>
-      </div>`;
+function cargarEstado() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      // Merge: mantener seed como base, aplicar edfs guardados
+      clientes = SEED.map(s => {
+        const guardado = saved.find(g => g.id === s.id);
+        return { ...s, edfs: guardado ? (guardado.edfs || []) : [] };
+      });
+      // Agregar clientes nuevos que no estan en seed
+      saved.forEach(g => {
+        if (g._nuevo && !clientes.find(c => c._tmpId === g._tmpId)) {
+          clientes.push({ ...g });
+        }
+      });
     } else {
-      html+=`<div class="edf-esperado">
-        <div class="edf-header">
-          <span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo}</span>
-          <span class="edf-number">Heladera ${i+1} — ${e.puertas} puerta${e.puertas>1?'s':''} — Pendiente</span>
-        </div>
-        <button class="btn-sm btn-outline" style="width:100%;padding:10px" onclick="openFillEDF(${i},${e.puertas},'${e.tipo}')">+ Cargar datos de esta heladera</button>
-      </div>`;
+      clientes = SEED.map(s => ({ ...s, edfs: [] }));
+    }
+  } catch(e) {
+    clientes = SEED.map(s => ({ ...s, edfs: [] }));
+  }
+}
+
+function guardarEstado() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(clientes)); } catch(e) {}
+}
+
+// Navegacion
+function mostrarPantalla(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function volverLista() {
+  mostrarPantalla('sc-lista');
+  renderLista();
+}
+
+function abrirCliente(idx) {
+  clienteIdx = idx;
+  const c = clientes[idx];
+  document.getElementById('c-nombre').textContent = c.razon;
+  document.getElementById('c-sub').textContent = (c.rubro || '—') + (c.id ? ' · ID: ' + c.id : ' · Cliente nuevo');
+  mostrarPantalla('sc-cliente');
+  renderEdfs();
+}
+
+// Render lista
+function renderLista() {
+  const q = (document.getElementById('buscador').value || '').toLowerCase();
+  const pendientes = [];
+  const completados = [];
+
+  clientes.forEach((c, i) => {
+    const match = c.razon.toLowerCase().includes(q) ||
+      (c.id && c.id.toString().includes(q)) ||
+      (c.rubro && c.rubro.toLowerCase().includes(q));
+    if (!match) return;
+    const esperados = c.edfs_esperados ? c.edfs_esperados.length : 0;
+    const cargados = c.edfs ? c.edfs.length : 0;
+    // Pendiente: no tiene nada cargado, o tiene menos de lo esperado, o es nuevo sin esperados
+    if (esperados === 0 || cargados < esperados) {
+      pendientes.push({c, i});
+    } else {
+      completados.push({c, i});
     }
   });
 
-  if(edfs.length > esp.length){
-    for(let i=esp.length;i<edfs.length;i++){
-      const filled=edfs[i];
-      html+=`<div class="edf-esperado edf-filled">
-        <div class="edf-header">
-          <span class="pill pill-${filled.tipo.toLowerCase()}">${filled.tipo}</span>
-          <span class="edf-number">Heladera adicional ${i+1} ✓</span>
-        </div>
-        <div class="edf-data-row"><span class="edf-data-label">N° Serie</span><span class="edf-data-val">${filled.serie||'—'}</span></div>
-        ${filled.activo?`<div class="edf-data-row"><span class="edf-data-label">N° Activo</span><span class="edf-data-val">${filled.activo}</span></div>`:''}
-        <div class="edf-data-row"><span class="edf-data-label">Movimiento</span><span class="edf-data-val">${filled.mov}</span></div>
-        ${filled.obs?`<div class="edf-data-row"><span class="edf-data-label">Observaciones</span><span class="edf-data-val">${filled.obs}</span></div>`:''}
-        <div class="edf-actions">
-          <button class="btn-sm btn-outline" onclick="openEditEDF(${i})">✏️ Editar</button>
-          <button class="btn-sm btn-danger-sm" onclick="deleteEDF(${i})">🗑 Borrar</button>
-        </div>
-      </div>`;
+  const total = clientes.length;
+  const totalEsperados = clientes.reduce((a, c) => a + (c.edfs_esperados ? c.edfs_esperados.length : 0), 0);
+  const totalCargados = clientes.reduce((a, c) => a + (c.edfs ? c.edfs.length : 0), 0);
+  document.getElementById('sub-progress').textContent = 
+    completados.length + '/' + total + ' clientes · ' + totalCargados + '/' + totalEsperados + ' EDF';
+
+  let html = '';
+  if (pendientes.length) {
+    html += '<div class="sec-label">Pendientes (' + pendientes.length + ')</div>';
+    pendientes.forEach(({c, i}) => { html += cardHTML(c, i); });
+  }
+  if (completados.length) {
+    html += '<div class="sec-label" style="margin-top:' + (pendientes.length ? '16px' : '0') + '">Completados (' + completados.length + ')</div>';
+    completados.forEach(({c, i}) => { html += cardHTML(c, i); });
+  }
+  if (!pendientes.length && !completados.length) {
+    html = '<div class="empty">Sin resultados</div>';
+  }
+  document.getElementById('lista').innerHTML = html;
+}
+
+function cardHTML(c, i) {
+  const edfs = c.edfs || [];
+  const esp = c.edfs_esperados || [];
+  const isDone = esp.length > 0 && edfs.length >= esp.length;
+  const badge = isDone
+    ? '<span class="badge badge-ok">' + edfs.length + ' EDF ✓</span>'
+    : '<span class="badge badge-pend">' + edfs.length + '/' + esp.length + ' EDF</span>';
+  const pills = esp.map((e, j) => {
+    const filled = edfs[j];
+    const cls = filled ? 'pill pill-' + e.tipo.toLowerCase() : 'pill pill-gray';
+    return '<span class="' + cls + '">' + e.tipo + ' ' + (e.puertas > 1 ? '2p' : '1p') + (filled ? ' ✓' : '') + '</span>';
+  }).join('');
+  return '<div class="client-card ' + (isDone ? 'done' : '') + '" onclick="abrirCliente(' + i + ')">' +
+    '<div class="card-top"><div class="card-body">' +
+    '<div class="card-name">' + esc(c.razon) + '</div>' +
+    '<div class="card-meta">' + esc(c.rubro || '—') + '</div>' +
+    '<div class="card-id">ID: ' + esc(c.id ? c.id.toString() : 'Nuevo') + '</div>' +
+    '</div>' + badge + '</div>' +
+    (pills ? '<div class="edf-pills">' + pills + '</div>' : '') +
+    '</div>';
+}
+
+// Render EDFs del cliente activo
+function renderEdfs() {
+  const c = clientes[clienteIdx];
+  const edfs = c.edfs || [];
+  const esp = c.edfs_esperados || [];
+  let html = '';
+
+  // Heladeras esperadas
+  esp.forEach((e, i) => {
+    const filled = edfs[i];
+    if (filled) {
+      html += edfCardFilled(filled, i, e);
+    } else {
+      html += '<div class="edf-card">' +
+        '<div class="edf-card-title">' +
+        '<span class="pill pill-' + e.tipo.toLowerCase() + '">' + e.tipo + '</span>' +
+        'Heladera ' + (i+1) + ' — ' + e.puertas + ' puerta' + (e.puertas > 1 ? 's' : '') + ' — Pendiente' +
+        '</div>' +
+        '<button class="btn-sm" style="width:100%;padding:11px" onclick="abrirModalEDF(' + i + ')">+ Cargar datos</button>' +
+        '</div>';
+    }
+  });
+
+  // Heladeras adicionales
+  for (let i = esp.length; i < edfs.length; i++) {
+    html += edfCardFilled(edfs[i], i, null);
+  }
+
+  if (!html) {
+    html = '<div class="empty">Tocá el botón para agregar la primera heladera</div>';
+  }
+
+  document.getElementById('c-edfs').innerHTML = html;
+}
+
+function edfCardFilled(e, i, esperado) {
+  const label = esperado
+    ? 'Heladera ' + (i+1) + ' — ' + esperado.tipo + ' ' + esperado.puertas + 'p ✓'
+    : 'Heladera adicional ' + (i+1) + ' ✓';
+  return '<div class="edf-card filled">' +
+    '<div class="edf-card-title"><span class="pill pill-' + e.tipo.toLowerCase() + '">' + e.tipo + '</span>' + label + '</div>' +
+    '<div class="edf-row"><span class="edf-row-label">N° Serie</span><span class="edf-row-val">' + esc(e.serie || '—') + '</span></div>' +
+    (e.activo ? '<div class="edf-row"><span class="edf-row-label">N° Activo</span><span class="edf-row-val">' + esc(e.activo) + '</span></div>' : '') +
+    '<div class="edf-row"><span class="edf-row-label">Movimiento</span><span class="edf-row-val">' + esc(e.mov) + '</span></div>' +
+    (e.obs ? '<div class="edf-row"><span class="edf-row-label">Obs.</span><span class="edf-row-val">' + esc(e.obs) + '</span></div>' : '') +
+    '<div class="edf-btns">' +
+    '<button class="btn-sm" onclick="abrirModalEDF(' + i + ')">✏️ Editar</button>' +
+    '<button class="btn-sm btn-sm-red" onclick="eliminarEDF(' + i + ')">🗑 Borrar</button>' +
+    '</div></div>';
+}
+
+// Modal EDF
+function abrirModalEDF(idx) {
+  edfEditIdx = idx;
+  const c = clientes[clienteIdx];
+  const esp = c.edfs_esperados || [];
+  const edfs = c.edfs || [];
+
+  // Limpiar form
+  document.getElementById('f-serie').value = '';
+  document.getElementById('f-activo').value = '';
+  document.getElementById('f-obs').value = '';
+  document.querySelectorAll('.ro').forEach(el => { el.classList.remove('sel'); el.querySelector('input').checked = false; });
+
+  let titulo = 'Agregar heladera';
+  let tipoDefault = null;
+  let puertasDefault = null;
+
+  if (idx !== null) {
+    const existente = edfs[idx];
+    if (existente) {
+      // Editar existente
+      titulo = 'Editar heladera ' + (idx + 1);
+      document.getElementById('f-serie').value = existente.serie || '';
+      document.getElementById('f-activo').value = existente.activo || '';
+      document.getElementById('f-obs').value = existente.obs || '';
+      tipoDefault = existente.tipo;
+      puertasDefault = String(existente.puertas);
+      setRadio('f-mov', existente.mov);
+    } else if (esp[idx]) {
+      // Cargar esperado
+      titulo = 'Cargar heladera ' + (idx + 1);
+      tipoDefault = esp[idx].tipo;
+      puertasDefault = String(esp[idx].puertas);
     }
   }
-  document.getElementById('c-edf-content').innerHTML = html || '<div class="empty"><div class="empty-icon">❄️</div>Sin heladeras registradas</div>';
+
+  document.getElementById('modal-edf-titulo').textContent = titulo;
+  if (tipoDefault) setRadio('f-tipo', tipoDefault);
+  if (puertasDefault) setRadio('f-puertas', puertasDefault);
+  actualizarVisibilidadPuertas();
+  document.getElementById('modal-edf').classList.add('open');
 }
 
-// ---- EDF MODAL ----
-function openFillEDF(idx, puertas, tipo){
-  editingEdfIdx = idx; isNewEdf = false;
-  document.getElementById('modal-edf-title').textContent = 'Cargar heladera '+(idx+1);
-  clearEDFForm();
-  setRadio('f-tipo', tipo);
-  setRadio('f-puertas', String(puertas));
-  if(tipo==='ADO') document.getElementById('row-puertas').style.display='none';
-  else document.getElementById('row-puertas').style.display='';
-  openModal('modal-edf');
+function actualizarVisibilidadPuertas() {
+  const tipo = document.querySelector('input[name="f-tipo"]:checked');
+  document.getElementById('row-puertas').style.display = (tipo && tipo.value === 'ADO') ? 'none' : '';
 }
 
-function openEditEDF(idx){
-  editingEdfIdx = idx; isNewEdf = false;
-  const c = getClient(currentVendor, currentClientKey);
-  const e = c.edfs[idx];
-  document.getElementById('modal-edf-title').textContent = 'Editar heladera '+(idx+1);
-  clearEDFForm();
-  document.getElementById('f-serie').value = e.serie||'';
-  document.getElementById('f-activo').value = e.activo||'';
-  document.getElementById('f-obs').value = e.obs||'';
-  setRadio('f-tipo', e.tipo);
-  setRadio('f-puertas', String(e.puertas));
-  setRadio('f-mov', e.mov);
-  if(e.tipo==='ADO') document.getElementById('row-puertas').style.display='none';
-  else document.getElementById('row-puertas').style.display='';
-  openModal('modal-edf');
-}
-
-function openAddEDFModal(){
-  editingEdfIdx = null; isNewEdf = true;
-  document.getElementById('modal-edf-title').textContent = 'Agregar heladera adicional';
-  clearEDFForm();
-  document.getElementById('row-puertas').style.display='';
-  openModal('modal-edf');
-}
-
-function clearEDFForm(){
-  ['f-serie','f-activo','f-obs'].forEach(id=>document.getElementById(id).value='');
-  ['rg-tipo','rg-puertas','rg-mov'].forEach(gid=>{
-    document.querySelectorAll('#'+gid+' .radio-opt').forEach(el=>{
-      el.classList.remove('sel');
-      el.querySelector('input').checked=false;
-    });
-  });
-}
-
-function setRadio(name, val){
-  const inp = document.querySelector('input[name="'+name+'"][value="'+val+'"]');
-  if(inp){ inp.checked=true; inp.closest('.radio-opt').classList.add('sel'); }
-}
-
-document.querySelectorAll('input[name="f-tipo"]').forEach(inp=>{
-  inp.addEventListener('change',()=>{
-    document.getElementById('row-puertas').style.display = inp.value==='ADO'?'none':'';
-    if(inp.value==='ADO') setRadio('f-puertas','1');
-  });
+document.querySelectorAll('input[name="f-tipo"]').forEach(inp => {
+  inp.addEventListener('change', actualizarVisibilidadPuertas);
 });
 
-function saveEDF(){
+function guardarEDF() {
   const serie = document.getElementById('f-serie').value.trim();
   const tipo = document.querySelector('input[name="f-tipo"]:checked');
   const puertas = document.querySelector('input[name="f-puertas"]:checked');
   const mov = document.querySelector('input[name="f-mov"]:checked');
-  if(!serie){ alert('El número de serie es obligatorio.'); return; }
-  if(!tipo){ alert('Seleccioná el tipo (CCU o ADO).'); return; }
-  if(!puertas && tipo.value!=='ADO'){ alert('Indicá la cantidad de puertas.'); return; }
-  if(!mov){ alert('Seleccioná el movimiento.'); return; }
+  if (!serie) { alert('El número de serie es obligatorio.'); return; }
+  if (!tipo) { alert('Seleccioná el tipo (CCU o ADO).'); return; }
+  if (!puertas && tipo.value !== 'ADO') { alert('Indicá la cantidad de puertas.'); return; }
+  if (!mov) { alert('Seleccioná el movimiento.'); return; }
+
   const edf = {
     serie,
     activo: document.getElementById('f-activo').value.trim(),
@@ -601,185 +415,113 @@ function saveEDF(){
     mov: mov.value,
     obs: document.getElementById('f-obs').value.trim()
   };
-  const c = getClient(currentVendor, currentClientKey);
-  if(!c.edfs) c.edfs=[];
-  if(isNewEdf){ c.edfs.push(edf); }
-  else { c.edfs[editingEdfIdx] = edf; }
-  saveState(currentVendor);
-  // Sync to Google Sheets
-  syncToSheets(currentVendor, getClient(currentVendor, currentClientKey), edf);
-  closeModal();
-  renderClientEDFs();
-  renderVendorList();
-  toast(isNewEdf?'Heladera guardada y enviada ✓':'Heladera actualizada y enviada ✓');
+
+  const c = clientes[clienteIdx];
+  if (!c.edfs) c.edfs = [];
+
+  if (edfEditIdx !== null && edfEditIdx < c.edfs.length) {
+    c.edfs[edfEditIdx] = edf; // editar
+  } else if (edfEditIdx !== null) {
+    c.edfs[edfEditIdx] = edf; // llenar esperado
+  } else {
+    c.edfs.push(edf); // nuevo adicional
+  }
+
+  guardarEstado();
+  syncSheets(c, edf);
+  cerrarModales();
+  renderEdfs();
+  toast('Guardado ✓');
 }
 
-function deleteEDF(idx){
-  if(!confirm('¿Borrar los datos de esta heladera?')) return;
-  const c = getClient(currentVendor, currentClientKey);
-  c.edfs.splice(idx,1);
-  saveState(currentVendor);
-  renderClientEDFs();
-  renderVendorList();
-  toast('Heladera eliminada');
+function eliminarEDF(idx) {
+  if (!confirm('¿Borrar esta heladera?')) return;
+  clientes[clienteIdx].edfs.splice(idx, 1);
+  guardarEstado();
+  renderEdfs();
+  toast('Eliminado');
 }
 
-// ---- NUEVO CLIENTE ----
-function openNuevoClienteModal(){
-  ['nc-id','nc-razon','nc-rubro'].forEach(id=>document.getElementById(id).value='');
-  openModal('modal-nuevo');
+// Modal nuevo cliente
+function abrirModalNuevo() {
+  ['nc-id','nc-razon','nc-rubro'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modal-nuevo').classList.add('open');
 }
 
-function saveNuevoCliente(){
+function guardarNuevoCliente() {
   const razon = document.getElementById('nc-razon').value.trim();
-  if(!razon){ alert('La razón social es obligatoria.'); return; }
-  const tmpId = 'TMP'+Date.now();
-  const nuevoCliente = {
-    _tmpId: tmpId,
-    id: document.getElementById('nc-id').value.trim()||null,
+  if (!razon) { alert('La razón social es obligatoria.'); return; }
+  const nuevo = {
+    _tmpId: 'TMP' + Date.now(),
+    id: document.getElementById('nc-id').value.trim() || null,
     razon,
     rubro: document.getElementById('nc-rubro').value.trim(),
-    edfs_esperados:[],
-    edfs:[],
+    edfs_esperados: [],
+    edfs: [],
     _nuevo: true
   };
-  STATE[currentVendor].clients.push(nuevoCliente);
-  saveState(currentVendor);
-  closeModal();
-  renderVendorList();
+  clientes.push(nuevo);
+  guardarEstado();
+  cerrarModales();
+  const idx = clientes.length - 1;
   toast('Cliente agregado');
-  // Ir directo al cliente para cargar la primera heladera
-  setTimeout(()=>{ goClient(tmpId); }, 200);
+  setTimeout(() => abrirCliente(idx), 150);
 }
 
-// ---- ADMIN ----
-function renderAdmin(){
-  let totalCli=0,totalEdf=0,totalDoneEdf=0,totalDoneCli=0;
-  VENDORS.forEach(v=>{
-    const s=vendorStats(v);
-    totalCli+=s.total; totalEdf+=s.totalEdf; totalDoneEdf+=s.edfDone; totalDoneCli+=s.done;
-  });
-  document.getElementById('admin-stats').innerHTML=`
-    <div class="stat-card"><div class="stat-n">${totalCli}</div><div class="stat-l">Clientes totales</div></div>
-    <div class="stat-card"><div class="stat-n" style="color:#0F6E56">${totalDoneCli}</div><div class="stat-l">Clientes completados</div></div>
-    <div class="stat-card"><div class="stat-n">${totalEdf}</div><div class="stat-l">EDF esperados</div></div>
-    <div class="stat-card"><div class="stat-n" style="color:#533AB7">${totalDoneEdf}</div><div class="stat-l">EDF relevados</div></div>
-  `;
-  document.getElementById('admin-vendors').innerHTML = VENDORS.map(v=>{
-    const s=vendorStats(v);
-    return `<div class="vendor-btn" onclick="goAdminV('${v}')" style="cursor:pointer">
-      <div class="vendor-avatar">${initials(v)}</div>
-      <div class="vendor-info">
-        <div class="vendor-name">${v}</div>
-        <div class="vendor-stats">${s.done}/${s.total} clientes · ${s.edfDone}/${s.totalEdf} EDF</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${s.pct}%"></div></div>
-      </div>
-      <div class="vendor-pct">${s.pct}%</div>
-    </div>`;
-  }).join('');
+// Helpers
+function cerrarModales() {
+  document.querySelectorAll('.modal-bg').forEach(m => m.classList.remove('open'));
 }
 
-function renderAdminVendor(v){
-  const clients = STATE[v].clients;
-  let html='';
-  clients.forEach(c=>{
-    const edfs=c.edfs||[];
-    const esp=c.edfs_esperados||[];
-    const done=edfs.length>=esp.length&&esp.length>0;
-    html+=`<div class="client-card ${done?'done':'pending'}" style="cursor:default">
-      <div class="card-top">
-        <div class="card-body">
-          <div class="card-name">${c.razon}</div>
-          <div class="card-meta">${c.rubro||'—'} · ID: ${c.id||'Nuevo'}</div>
-        </div>
-        <span class="badge ${done?'badge-ok':'badge-pend'}">${edfs.length}/${esp.length}</span>
-      </div>
-      ${edfs.length>0?`<div class="edf-pills">${edfs.map(e=>`<span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo} · ${e.serie||'?'} · ${e.mov}</span>`).join('')}</div>`:''}
-    </div>`;
-  });
-  document.getElementById('av-content').innerHTML = html||'<div class="empty">Sin datos</div>';
-}
-
-function exportExcel(){
-  const rows=[['Vendedor','ID Cliente','Razón Social','Rubro','Cliente Nuevo','N° Serie','N° Activo','Tipo EDF','Puertas','Movimiento','Observaciones']];
-  VENDORS.forEach(v=>{
-    STATE[v].clients.forEach(c=>{
-      const edfs=c.edfs||[];
-      const esp=c.edfs_esperados||[];
-      if(edfs.length===0){
-        rows.push([v,c.id||'',c.razon,c.rubro||'',c._nuevo?'Sí':'No','','','','','','']);
-      } else {
-        edfs.forEach(e=>{
-          rows.push([v,c.id||'',c.razon,c.rubro||'',c._nuevo?'Sí':'No',e.serie||'',e.activo||'',e.tipo,e.puertas,e.mov,e.obs||'']);
-        });
-      }
-    });
-  });
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:18},{wch:10},{wch:28},{wch:14},{wch:12},{wch:14},{wch:12},{wch:8},{wch:7},{wch:14},{wch:26}];
-  XLSX.utils.book_append_sheet(wb,ws,'Relevamiento EDF');
-  XLSX.writeFile(wb,'relevamiento_edf_'+new Date().toISOString().slice(0,10)+'.xlsx');
-  toast('Excel descargado ✓');
-}
-
-// ---- MODAL UTILS ----
-function openModal(id){ document.getElementById(id).classList.add('open'); }
-function closeModal(){ document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open')); }
-function selRG(gid,el){
-  document.querySelectorAll('#'+gid+' .radio-opt').forEach(x=>x.classList.remove('sel'));
+function selRG(el, grupo) {
+  document.querySelectorAll('#' + grupo + ' .ro').forEach(x => x.classList.remove('sel'));
   el.classList.add('sel');
 }
-document.querySelectorAll('.modal-bg').forEach(m=>{
-  m.addEventListener('click',e=>{ if(e.target===m) closeModal(); });
+
+function setRadio(name, val) {
+  const inp = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+  if (inp) { inp.checked = true; inp.closest('.ro').classList.add('sel'); }
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+async function syncSheets(cliente, edf) {
+  try {
+    await fetch(SHEETS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        vendedor: VENDOR,
+        id_cliente: cliente.id || '',
+        razon: cliente.razon,
+        rubro: cliente.rubro || '',
+        cliente_nuevo: cliente._nuevo ? 'Sí' : 'No',
+        serie: edf.serie || '',
+        activo: edf.activo || '',
+        tipo: edf.tipo,
+        puertas: edf.puertas,
+        mov: edf.mov,
+        obs: edf.obs || ''
+      })
+    });
+  } catch(e) { console.warn('Sync error', e); }
+}
+
+document.querySelectorAll('.modal-bg').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) cerrarModales(); });
 });
 
-// ---- TOAST ----
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  clearTimeout(t._to);
-  t._to=setTimeout(()=>t.classList.remove('show'),2200);
-}
-
-
-const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzy-dvwJwWIhfjwNx4dUH3yLnCXMEvQKkV_9qV-PA_zATyNMZWRcOG9T9TP709jbE4S/exec";
-
-async function syncToSheets(vendedor, cliente, edf) {
-  try {
-    const payload = {
-      vendedor: vendedor,
-      id_cliente: cliente.id || '',
-      razon: cliente.razon,
-      rubro: cliente.rubro || '',
-      cliente_nuevo: cliente._nuevo ? 'Sí' : 'No',
-      serie: edf.serie || '',
-      activo: edf.activo || '',
-      tipo: edf.tipo,
-      puertas: edf.puertas,
-      mov: edf.mov,
-      obs: edf.obs || ''
-    };
-    await fetch(SHEETS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-  } catch(e) {
-    console.warn('Sync error:', e);
-  }
-}
-
-// INIT
-loadAllStates();
-// Ir directo al vendedor
-currentVendor = "MARINA COLLAZO";
-document.getElementById('v-title').textContent = "MARINA COLLAZO";
-updateVSubtitle();
-showScreen('sc-vendor');
-renderVendorList();
-renderLogin();
+// Init
+cargarEstado();
+renderLista();
 </script>
 </body>
 </html>
