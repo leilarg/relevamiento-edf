@@ -61,7 +61,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .modal-title{font-size:17px;font-weight:700;margin-bottom:16px}
 .form-row{margin-bottom:14px}
 .form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
-.form-row input,.form-row select,.form-row textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;font-size:15px;color:var(--text);outline:none}
+.form-row input,.form-row textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;font-size:15px;color:var(--text);outline:none}
 .form-row input:focus,.form-row textarea:focus{border-color:var(--purple);background:var(--surface)}
 .form-row textarea{height:70px;resize:none}
 .rg{display:flex;gap:8px;flex-wrap:wrap}
@@ -74,6 +74,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#1A1A18;color:#fff;font-size:13px;font-weight:500;padding:10px 20px;border-radius:20px;z-index:200;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:40px 20px;color:var(--text2);font-size:14px}
+.syncing{font-size:11px;color:var(--text3);text-align:center;padding:8px;}
 </style>
 </head>
 <body>
@@ -85,13 +86,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="topbar-title">ANDREA RAMIREZ</div>
       <div class="topbar-sub" id="sub-progress">Cargando...</div>
     </div>
-    <button class="topbar-btn" onclick="location.reload()">↺</button>
+    <button class="topbar-btn" onclick="cargarDesdeSheets()">↺</button>
   </div>
   <div class="content">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
       <input type="text" id="buscador" placeholder="Buscar cliente o ID..." oninput="renderLista()">
     </div>
+    <div id="syncing-msg" class="syncing">Sincronizando con servidor...</div>
     <div id="lista"></div>
   </div>
   <div class="fab-wrap">
@@ -167,53 +169,117 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const VENDOR = "ANDREA RAMIREZ";
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzy-dvwJwWIhfjwNx4dUH3yLnCXMEvQKkV_9qV-PA_zATyNMZWRcOG9T9TP709jbE4S/exec";
 const STORAGE_KEY = 'edf_v3_' + VENDOR.replace(/\s+/g,'_');
-
-// Seed data — lista base de clientes
 const SEED = [{"id":"3347","razon":"ORLANDO JULIAN MATIAS","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"505","razon":"CARECO SUPERS S.A-CENTRAL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"747","razon":"SCHMUNCK LUCAS ADRIAN","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4716","razon":"MARTINEZ SANDRA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5195","razon":"SUPER BONYOS SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5394","razon":"SUPER BONYOS SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5727","razon":"DE ANDREA ALEJANDRO AGUSTIN","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6771","razon":"RIVAS JULIO","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6195","razon":"WU HAIDONG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"6196","razon":"HUANG RONGSHENG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"8204","razon":"VERA LEONEL","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8982","razon":"MOLINA ALEJANDRA ESTELA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4941","razon":"WARD TOMAS ROBERTO","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"1544","razon":"DELUCHI JIMENA VANESA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"2917","razon":"CATRACCHIA FRANCISCO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"6819","razon":"VARELA FERNANDO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"8212","razon":"SILVA DEBORA YANINA Y GONZALEZ NATALIE JEANETTE","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6931","razon":"PEREZ AGUSTIN NAZARENO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7053","razon":"CHORHY IGNACIO JAVIER","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8218","razon":"ZHENG QIWEN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8852","razon":"TRESAR REGIA Y TANO","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"ADO","puertas":1}]},{"id":"7058","razon":"PINTZAS MATIAS MIGUEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}]}];
 
-// Estado en memoria — indice numerico para evitar bugs de keys
 let clientes = [];
-let clienteIdx = null; // indice del cliente activo
-let edfEditIdx = null; // indice del edf que se edita (null = nuevo)
+let clienteIdx = null;
+let edfEditIdx = null;
 
-function cargarEstado() {
+function cargarEstadoLocal() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const saved = JSON.parse(raw);
-      // Merge: mantener seed como base, aplicar edfs guardados
       clientes = SEED.map(s => {
-        const guardado = saved.find(g => g.id === s.id);
-        return { ...s, edfs: guardado ? (guardado.edfs || []) : [] };
+        const g = saved.find(x => x.id === s.id);
+        return {...s, edfs: g ? (g.edfs||[]) : []};
       });
-      // Agregar clientes nuevos que no estan en seed
       saved.forEach(g => {
-        if (g._nuevo && !clientes.find(c => c._tmpId === g._tmpId)) {
-          clientes.push({ ...g });
-        }
+        if (g._nuevo && !clientes.find(c => c._tmpId === g._tmpId))
+          clientes.push({...g});
       });
     } else {
-      clientes = SEED.map(s => ({ ...s, edfs: [] }));
+      clientes = SEED.map(s => ({...s, edfs:[]}));
     }
   } catch(e) {
-    clientes = SEED.map(s => ({ ...s, edfs: [] }));
+    clientes = SEED.map(s => ({...s, edfs:[]}));
   }
+}
+
+async function cargarDesdeSheets() {
+  document.getElementById('syncing-msg').style.display = 'block';
+  try {
+    const res = await fetch(SHEETS_URL + '?vendedor=' + encodeURIComponent(VENDOR) + '&t=' + Date.now());
+    const data = await res.json();
+    if (data && data.length > 1) {
+      const headers = data[0];
+      const rows = data.slice(1);
+      const idIdx = headers.indexOf('ID Cliente');
+      const serieIdx = headers.indexOf('N° Serie');
+      const activoIdx = headers.indexOf('N° Activo');
+      const tipoIdx = headers.indexOf('Tipo EDF');
+      const puertasIdx = headers.indexOf('Puertas');
+      const movIdx = headers.indexOf('Movimiento');
+      const obsIdx = headers.indexOf('Observaciones');
+      const nuevoIdx = headers.indexOf('Cliente Nuevo');
+      const razonIdx = headers.indexOf('Razón Social');
+      const rubroIdx = headers.indexOf('Rubro');
+
+      // Agrupar filas por ID cliente
+      const porId = {};
+      rows.forEach(row => {
+        const id = String(row[idIdx]||'');
+        if (!porId[id]) porId[id] = [];
+        porId[id].push({
+          serie: row[serieIdx]||'',
+          activo: row[activoIdx]||'',
+          tipo: row[tipoIdx]||'',
+          puertas: parseInt(row[puertasIdx])||1,
+          mov: row[movIdx]||'',
+          obs: row[obsIdx]||''
+        });
+      });
+
+      // Aplicar al estado
+      clientes = SEED.map(s => {
+        const edfsSheets = porId[String(s.id||'')] || [];
+        const local = clientes.find(c => c.id === s.id);
+        const edfsLocal = local ? (local.edfs||[]) : [];
+        // Usar sheets si tiene mas datos, sino local
+        const edfs = edfsSheets.length >= edfsLocal.length ? edfsSheets : edfsLocal;
+        return {...s, edfs};
+      });
+
+      // Clientes nuevos del sheet
+      rows.forEach(row => {
+        if (row[nuevoIdx] === 'Sí') {
+          const razon = row[razonIdx]||'';
+          if (razon && !clientes.find(c => c.razon === razon && c._nuevo)) {
+            clientes.push({
+              _tmpId: 'SHEET_' + Date.now() + Math.random(),
+              id: row[idIdx]||null,
+              razon,
+              rubro: row[rubroIdx]||'',
+              edfs_esperados:[],
+              edfs: porId[String(row[idIdx]||'')] || [],
+              _nuevo: true
+            });
+          }
+        }
+      });
+
+      guardarEstado();
+      toast('Sincronizado ✓');
+    }
+  } catch(e) {
+    console.warn('Error sync:', e);
+  }
+  document.getElementById('syncing-msg').style.display = 'none';
+  renderLista();
 }
 
 function guardarEstado() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(clientes)); } catch(e) {}
 }
 
-// Navegacion
 function mostrarPantalla(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
 function volverLista() {
@@ -225,262 +291,199 @@ function abrirCliente(idx) {
   clienteIdx = idx;
   const c = clientes[idx];
   document.getElementById('c-nombre').textContent = c.razon;
-  document.getElementById('c-sub').textContent = (c.rubro || '—') + (c.id ? ' · ID: ' + c.id : ' · Cliente nuevo');
+  document.getElementById('c-sub').textContent = (c.rubro||'—') + (c.id ? ' · ID: ' + c.id : ' · Cliente nuevo');
   mostrarPantalla('sc-cliente');
   renderEdfs();
 }
 
-// Render lista
 function renderLista() {
-  const q = (document.getElementById('buscador').value || '').toLowerCase();
-  const pendientes = [];
-  const completados = [];
-
-  clientes.forEach((c, i) => {
+  const q = (document.getElementById('buscador').value||'').toLowerCase();
+  const pendientes = [], completados = [];
+  clientes.forEach((c,i) => {
     const match = c.razon.toLowerCase().includes(q) ||
-      (c.id && c.id.toString().includes(q)) ||
+      (c.id && String(c.id).includes(q)) ||
       (c.rubro && c.rubro.toLowerCase().includes(q));
     if (!match) return;
-    const esperados = c.edfs_esperados ? c.edfs_esperados.length : 0;
-    const cargados = c.edfs ? c.edfs.length : 0;
-    // Pendiente: no tiene nada cargado, o tiene menos de lo esperado, o es nuevo sin esperados
-    if (esperados === 0 || cargados < esperados) {
-      pendientes.push({c, i});
-    } else {
-      completados.push({c, i});
-    }
+    const esp = c.edfs_esperados ? c.edfs_esperados.length : 0;
+    const carg = c.edfs ? c.edfs.length : 0;
+    if (esp === 0 || carg < esp) pendientes.push({c,i});
+    else completados.push({c,i});
   });
 
   const total = clientes.length;
-  const totalEsperados = clientes.reduce((a, c) => a + (c.edfs_esperados ? c.edfs_esperados.length : 0), 0);
-  const totalCargados = clientes.reduce((a, c) => a + (c.edfs ? c.edfs.length : 0), 0);
-  document.getElementById('sub-progress').textContent = 
-    completados.length + '/' + total + ' clientes · ' + totalCargados + '/' + totalEsperados + ' EDF';
+  const totalEsp = clientes.reduce((a,c)=>a+(c.edfs_esperados?c.edfs_esperados.length:0),0);
+  const totalCarg = clientes.reduce((a,c)=>a+(c.edfs?c.edfs.length:0),0);
+  document.getElementById('sub-progress').textContent =
+    completados.length+'/'+total+' clientes · '+totalCarg+'/'+totalEsp+' EDF';
 
   let html = '';
   if (pendientes.length) {
-    html += '<div class="sec-label">Pendientes (' + pendientes.length + ')</div>';
-    pendientes.forEach(({c, i}) => { html += cardHTML(c, i); });
+    html += '<div class="sec-label">Pendientes ('+pendientes.length+')</div>';
+    pendientes.forEach(({c,i}) => { html += cardHTML(c,i); });
   }
   if (completados.length) {
-    html += '<div class="sec-label" style="margin-top:' + (pendientes.length ? '16px' : '0') + '">Completados (' + completados.length + ')</div>';
-    completados.forEach(({c, i}) => { html += cardHTML(c, i); });
+    html += '<div class="sec-label" style="margin-top:'+(pendientes.length?'16px':'0')+'">Completados ('+completados.length+')</div>';
+    completados.forEach(({c,i}) => { html += cardHTML(c,i); });
   }
-  if (!pendientes.length && !completados.length) {
-    html = '<div class="empty">Sin resultados</div>';
-  }
+  if (!pendientes.length && !completados.length) html = '<div class="empty">Sin resultados</div>';
   document.getElementById('lista').innerHTML = html;
 }
 
-function cardHTML(c, i) {
-  const edfs = c.edfs || [];
-  const esp = c.edfs_esperados || [];
+function cardHTML(c,i) {
+  const edfs = c.edfs||[];
+  const esp = c.edfs_esperados||[];
   const isDone = esp.length > 0 && edfs.length >= esp.length;
   const badge = isDone
-    ? '<span class="badge badge-ok">' + edfs.length + ' EDF ✓</span>'
-    : '<span class="badge badge-pend">' + edfs.length + '/' + esp.length + ' EDF</span>';
-  const pills = esp.map((e, j) => {
+    ? '<span class="badge badge-ok">'+edfs.length+' EDF ✓</span>'
+    : '<span class="badge badge-pend">'+edfs.length+'/'+esp.length+' EDF</span>';
+  const pills = esp.map((e,j) => {
     const filled = edfs[j];
-    const cls = filled ? 'pill pill-' + e.tipo.toLowerCase() : 'pill pill-gray';
-    return '<span class="' + cls + '">' + e.tipo + ' ' + (e.puertas > 1 ? '2p' : '1p') + (filled ? ' ✓' : '') + '</span>';
+    const cls = filled ? 'pill pill-'+e.tipo.toLowerCase() : 'pill pill-gray';
+    return '<span class="'+cls+'">'+e.tipo+' '+(e.puertas>1?'2p':'1p')+(filled?' ✓':'')+'</span>';
   }).join('');
-  return '<div class="client-card ' + (isDone ? 'done' : '') + '" onclick="abrirCliente(' + i + ')">' +
-    '<div class="card-top"><div class="card-body">' +
-    '<div class="card-name">' + esc(c.razon) + '</div>' +
-    '<div class="card-meta">' + esc(c.rubro || '—') + '</div>' +
-    '<div class="card-id">ID: ' + esc(c.id ? c.id.toString() : 'Nuevo') + '</div>' +
-    '</div>' + badge + '</div>' +
-    (pills ? '<div class="edf-pills">' + pills + '</div>' : '') +
+  return '<div class="client-card '+(isDone?'done':'')+'" onclick="abrirCliente('+i+')">'+
+    '<div class="card-top"><div class="card-body">'+
+    '<div class="card-name">'+esc(c.razon)+'</div>'+
+    '<div class="card-meta">'+esc(c.rubro||'—')+'</div>'+
+    '<div class="card-id">ID: '+esc(c.id?String(c.id):'Nuevo')+'</div>'+
+    '</div>'+badge+'</div>'+
+    (pills?'<div class="edf-pills">'+pills+'</div>':'')+
     '</div>';
 }
 
-// Render EDFs del cliente activo
 function renderEdfs() {
   const c = clientes[clienteIdx];
-  const edfs = c.edfs || [];
-  const esp = c.edfs_esperados || [];
+  const edfs = c.edfs||[];
+  const esp = c.edfs_esperados||[];
   let html = '';
-
-  // Heladeras esperadas
-  esp.forEach((e, i) => {
+  esp.forEach((e,i) => {
     const filled = edfs[i];
     if (filled) {
-      html += edfCardFilled(filled, i, e);
+      html += edfCardFilled(filled,i,e);
     } else {
-      html += '<div class="edf-card">' +
-        '<div class="edf-card-title">' +
-        '<span class="pill pill-' + e.tipo.toLowerCase() + '">' + e.tipo + '</span>' +
-        'Heladera ' + (i+1) + ' — ' + e.puertas + ' puerta' + (e.puertas > 1 ? 's' : '') + ' — Pendiente' +
-        '</div>' +
-        '<button class="btn-sm" style="width:100%;padding:11px" onclick="abrirModalEDF(' + i + ')">+ Cargar datos</button>' +
+      html += '<div class="edf-card">'+
+        '<div class="edf-card-title"><span class="pill pill-'+e.tipo.toLowerCase()+'">'+e.tipo+'</span>'+
+        'Heladera '+(i+1)+' — '+e.puertas+' puerta'+(e.puertas>1?'s':'')+' — Pendiente</div>'+
+        '<button class="btn-sm" style="width:100%;padding:11px" onclick="abrirModalEDF('+i+')">+ Cargar datos</button>'+
         '</div>';
     }
   });
-
-  // Heladeras adicionales
   for (let i = esp.length; i < edfs.length; i++) {
-    html += edfCardFilled(edfs[i], i, null);
+    html += edfCardFilled(edfs[i],i,null);
   }
-
-  if (!html) {
-    html = '<div class="empty">Tocá el botón para agregar la primera heladera</div>';
-  }
-
+  if (!html) html = '<div class="empty">Tocá el botón para agregar la primera heladera</div>';
   document.getElementById('c-edfs').innerHTML = html;
 }
 
-function edfCardFilled(e, i, esperado) {
-  const label = esperado
-    ? 'Heladera ' + (i+1) + ' — ' + esperado.tipo + ' ' + esperado.puertas + 'p ✓'
-    : 'Heladera adicional ' + (i+1) + ' ✓';
-  return '<div class="edf-card filled">' +
-    '<div class="edf-card-title"><span class="pill pill-' + e.tipo.toLowerCase() + '">' + e.tipo + '</span>' + label + '</div>' +
-    '<div class="edf-row"><span class="edf-row-label">N° Serie</span><span class="edf-row-val">' + esc(e.serie || '—') + '</span></div>' +
-    (e.activo ? '<div class="edf-row"><span class="edf-row-label">N° Activo</span><span class="edf-row-val">' + esc(e.activo) + '</span></div>' : '') +
-    '<div class="edf-row"><span class="edf-row-label">Movimiento</span><span class="edf-row-val">' + esc(e.mov) + '</span></div>' +
-    (e.obs ? '<div class="edf-row"><span class="edf-row-label">Obs.</span><span class="edf-row-val">' + esc(e.obs) + '</span></div>' : '') +
-    '<div class="edf-btns">' +
-    '<button class="btn-sm" onclick="abrirModalEDF(' + i + ')">✏️ Editar</button>' +
-    '<button class="btn-sm btn-sm-red" onclick="eliminarEDF(' + i + ')">🗑 Borrar</button>' +
+function edfCardFilled(e,i,esp) {
+  const label = esp ? 'Heladera '+(i+1)+' — '+esp.tipo+' '+esp.puertas+'p ✓' : 'Heladera adicional '+(i+1)+' ✓';
+  return '<div class="edf-card filled">'+
+    '<div class="edf-card-title"><span class="pill pill-'+e.tipo.toLowerCase()+'">'+e.tipo+'</span>'+label+'</div>'+
+    '<div class="edf-row"><span class="edf-row-label">N° Serie</span><span class="edf-row-val">'+esc(e.serie||'—')+'</span></div>'+
+    (e.activo?'<div class="edf-row"><span class="edf-row-label">N° Activo</span><span class="edf-row-val">'+esc(e.activo)+'</span></div>':'')+
+    '<div class="edf-row"><span class="edf-row-label">Movimiento</span><span class="edf-row-val">'+esc(e.mov)+'</span></div>'+
+    (e.obs?'<div class="edf-row"><span class="edf-row-label">Obs.</span><span class="edf-row-val">'+esc(e.obs)+'</span></div>':'')+
+    '<div class="edf-btns">'+
+    '<button class="btn-sm" onclick="abrirModalEDF('+i+')">✏️ Editar</button>'+
+    '<button class="btn-sm btn-sm-red" onclick="eliminarEDF('+i+')">🗑 Borrar</button>'+
     '</div></div>';
 }
 
-// Modal EDF
 function abrirModalEDF(idx) {
   edfEditIdx = idx;
   const c = clientes[clienteIdx];
-  const esp = c.edfs_esperados || [];
-  const edfs = c.edfs || [];
-
-  // Limpiar form
-  document.getElementById('f-serie').value = '';
-  document.getElementById('f-activo').value = '';
-  document.getElementById('f-obs').value = '';
-  document.querySelectorAll('.ro').forEach(el => { el.classList.remove('sel'); el.querySelector('input').checked = false; });
-
-  let titulo = 'Agregar heladera';
-  let tipoDefault = null;
-  let puertasDefault = null;
-
+  const esp = c.edfs_esperados||[];
+  const edfs = c.edfs||[];
+  document.getElementById('f-serie').value='';
+  document.getElementById('f-activo').value='';
+  document.getElementById('f-obs').value='';
+  document.querySelectorAll('.ro').forEach(el=>{el.classList.remove('sel');el.querySelector('input').checked=false;});
+  let titulo='Agregar heladera', tipoD=null, puertasD=null;
   if (idx !== null) {
-    const existente = edfs[idx];
-    if (existente) {
-      // Editar existente
-      titulo = 'Editar heladera ' + (idx + 1);
-      document.getElementById('f-serie').value = existente.serie || '';
-      document.getElementById('f-activo').value = existente.activo || '';
-      document.getElementById('f-obs').value = existente.obs || '';
-      tipoDefault = existente.tipo;
-      puertasDefault = String(existente.puertas);
-      setRadio('f-mov', existente.mov);
+    const ex = edfs[idx];
+    if (ex) {
+      titulo='Editar heladera '+(idx+1);
+      document.getElementById('f-serie').value=ex.serie||'';
+      document.getElementById('f-activo').value=ex.activo||'';
+      document.getElementById('f-obs').value=ex.obs||'';
+      tipoD=ex.tipo; puertasD=String(ex.puertas);
+      setRadio('f-mov',ex.mov);
     } else if (esp[idx]) {
-      // Cargar esperado
-      titulo = 'Cargar heladera ' + (idx + 1);
-      tipoDefault = esp[idx].tipo;
-      puertasDefault = String(esp[idx].puertas);
+      titulo='Cargar heladera '+(idx+1);
+      tipoD=esp[idx].tipo; puertasD=String(esp[idx].puertas);
     }
   }
-
-  document.getElementById('modal-edf-titulo').textContent = titulo;
-  if (tipoDefault) setRadio('f-tipo', tipoDefault);
-  if (puertasDefault) setRadio('f-puertas', puertasDefault);
-  actualizarVisibilidadPuertas();
+  document.getElementById('modal-edf-titulo').textContent=titulo;
+  if(tipoD) setRadio('f-tipo',tipoD);
+  if(puertasD) setRadio('f-puertas',puertasD);
+  actualizarPuertas();
   document.getElementById('modal-edf').classList.add('open');
 }
 
-function actualizarVisibilidadPuertas() {
-  const tipo = document.querySelector('input[name="f-tipo"]:checked');
-  document.getElementById('row-puertas').style.display = (tipo && tipo.value === 'ADO') ? 'none' : '';
+function actualizarPuertas() {
+  const t=document.querySelector('input[name="f-tipo"]:checked');
+  document.getElementById('row-puertas').style.display=(t&&t.value==='ADO')?'none':'';
 }
-
-document.querySelectorAll('input[name="f-tipo"]').forEach(inp => {
-  inp.addEventListener('change', actualizarVisibilidadPuertas);
-});
+document.querySelectorAll('input[name="f-tipo"]').forEach(i=>i.addEventListener('change',actualizarPuertas));
 
 function guardarEDF() {
-  const serie = document.getElementById('f-serie').value.trim();
-  const tipo = document.querySelector('input[name="f-tipo"]:checked');
-  const puertas = document.querySelector('input[name="f-puertas"]:checked');
-  const mov = document.querySelector('input[name="f-mov"]:checked');
-  if (!serie) { alert('El número de serie es obligatorio.'); return; }
-  if (!tipo) { alert('Seleccioná el tipo (CCU o ADO).'); return; }
-  if (!puertas && tipo.value !== 'ADO') { alert('Indicá la cantidad de puertas.'); return; }
-  if (!mov) { alert('Seleccioná el movimiento.'); return; }
-
-  const edf = {
-    serie,
-    activo: document.getElementById('f-activo').value.trim(),
-    tipo: tipo.value,
-    puertas: puertas ? parseInt(puertas.value) : 1,
-    mov: mov.value,
-    obs: document.getElementById('f-obs').value.trim()
-  };
-
-  const c = clientes[clienteIdx];
-  if (!c.edfs) c.edfs = [];
-
-  if (edfEditIdx !== null && edfEditIdx < c.edfs.length) {
-    c.edfs[edfEditIdx] = edf; // editar
-  } else if (edfEditIdx !== null) {
-    c.edfs[edfEditIdx] = edf; // llenar esperado
-  } else {
-    c.edfs.push(edf); // nuevo adicional
-  }
-
+  const serie=document.getElementById('f-serie').value.trim();
+  const tipo=document.querySelector('input[name="f-tipo"]:checked');
+  const puertas=document.querySelector('input[name="f-puertas"]:checked');
+  const mov=document.querySelector('input[name="f-mov"]:checked');
+  if(!serie){alert('El número de serie es obligatorio.');return;}
+  if(!tipo){alert('Seleccioná el tipo.');return;}
+  if(!puertas&&tipo.value!=='ADO'){alert('Indicá la cantidad de puertas.');return;}
+  if(!mov){alert('Seleccioná el movimiento.');return;}
+  const edf={serie,activo:document.getElementById('f-activo').value.trim(),tipo:tipo.value,puertas:puertas?parseInt(puertas.value):1,mov:mov.value,obs:document.getElementById('f-obs').value.trim()};
+  const c=clientes[clienteIdx];
+  if(!c.edfs)c.edfs=[];
+  if(edfEditIdx!==null){c.edfs[edfEditIdx]=edf;}else{c.edfs.push(edf);}
   guardarEstado();
-  syncSheets(c, edf);
+  syncSheets(c,edf);
   cerrarModales();
   renderEdfs();
-  toast('Guardado ✓');
+  renderLista();
+  toast('Guardado y enviado ✓');
 }
 
 function eliminarEDF(idx) {
-  if (!confirm('¿Borrar esta heladera?')) return;
-  clientes[clienteIdx].edfs.splice(idx, 1);
+  if(!confirm('¿Borrar esta heladera?'))return;
+  clientes[clienteIdx].edfs.splice(idx,1);
   guardarEstado();
   renderEdfs();
+  renderLista();
   toast('Eliminado');
 }
 
-// Modal nuevo cliente
 function abrirModalNuevo() {
-  ['nc-id','nc-razon','nc-rubro'].forEach(id => document.getElementById(id).value = '');
+  ['nc-id','nc-razon','nc-rubro'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('modal-nuevo').classList.add('open');
 }
 
 function guardarNuevoCliente() {
-  const razon = document.getElementById('nc-razon').value.trim();
-  if (!razon) { alert('La razón social es obligatoria.'); return; }
-  const nuevo = {
-    _tmpId: 'TMP' + Date.now(),
-    id: document.getElementById('nc-id').value.trim() || null,
-    razon,
-    rubro: document.getElementById('nc-rubro').value.trim(),
-    edfs_esperados: [],
-    edfs: [],
-    _nuevo: true
-  };
+  const razon=document.getElementById('nc-razon').value.trim();
+  if(!razon){alert('La razón social es obligatoria.');return;}
+  const nuevo={_tmpId:'TMP'+Date.now(),id:document.getElementById('nc-id').value.trim()||null,razon,rubro:document.getElementById('nc-rubro').value.trim(),edfs_esperados:[],edfs:[],_nuevo:true};
   clientes.push(nuevo);
   guardarEstado();
   cerrarModales();
-  const idx = clientes.length - 1;
   toast('Cliente agregado');
-  setTimeout(() => abrirCliente(idx), 150);
+  setTimeout(()=>abrirCliente(clientes.length-1),150);
 }
 
-// Helpers
 function cerrarModales() {
-  document.querySelectorAll('.modal-bg').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.modal-bg').forEach(m=>m.classList.remove('open'));
 }
 
-function selRG(el, grupo) {
-  document.querySelectorAll('#' + grupo + ' .ro').forEach(x => x.classList.remove('sel'));
+function selRG(el,grupo) {
+  document.querySelectorAll('#'+grupo+' .ro').forEach(x=>x.classList.remove('sel'));
   el.classList.add('sel');
 }
 
-function setRadio(name, val) {
-  const inp = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
-  if (inp) { inp.checked = true; inp.closest('.ro').classList.add('sel'); }
+function setRadio(name,val) {
+  const inp=document.querySelector('input[name="'+name+'"][value="'+val+'"]');
+  if(inp){inp.checked=true;inp.closest('.ro').classList.add('sel');}
 }
 
 function esc(s) {
@@ -488,40 +491,25 @@ function esc(s) {
 }
 
 function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2000);
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-async function syncSheets(cliente, edf) {
+async function syncSheets(cliente,edf) {
   try {
-    await fetch(SHEETS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        vendedor: VENDOR,
-        id_cliente: cliente.id || '',
-        razon: cliente.razon,
-        rubro: cliente.rubro || '',
-        cliente_nuevo: cliente._nuevo ? 'Sí' : 'No',
-        serie: edf.serie || '',
-        activo: edf.activo || '',
-        tipo: edf.tipo,
-        puertas: edf.puertas,
-        mov: edf.mov,
-        obs: edf.obs || ''
-      })
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({vendedor:VENDOR,id_cliente:cliente.id||'',razon:cliente.razon,rubro:cliente.rubro||'',cliente_nuevo:cliente._nuevo?'Sí':'No',serie:edf.serie||'',activo:edf.activo||'',tipo:edf.tipo,puertas:edf.puertas,mov:edf.mov,obs:edf.obs||''})
     });
-  } catch(e) { console.warn('Sync error', e); }
+  }catch(e){console.warn('Sync error',e);}
 }
 
-document.querySelectorAll('.modal-bg').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) cerrarModales(); });
-});
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)cerrarModales();}));
 
-// Init
-cargarEstado();
+// Init: cargar local primero, luego sincronizar con sheets
+cargarEstadoLocal();
 renderLista();
+cargarDesdeSheets();
 </script>
 </body>
 </html>
