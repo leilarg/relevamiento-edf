@@ -6,7 +6,7 @@
 <title>Admin — Relevamiento EDF</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#F8F7F4;--surface:#FFF;--border:#E5E2DA;--border2:#CCCAB8;--text:#1A1A18;--text2:#6B6960;--text3:#A09D94;--purple:#533AB7;--purple-bg:#EEEDFE;--green-bg:#E1F5EE;--green-text:#0F6E56;--amber-bg:#FAEEDA;--amber-text:#854F0B;--blue-bg:#E6F1FB;--blue-text:#0C447C;--radius:12px}
+:root{--bg:#F8F7F4;--surface:#FFF;--border:#E5E2DA;--border2:#CCCAB8;--text:#1A1A18;--text2:#6B6960;--text3:#A09D94;--purple:#533AB7;--green-bg:#E1F5EE;--green-text:#0F6E56;--amber-bg:#FAEEDA;--amber-text:#854F0B;--blue-bg:#E6F1FB;--blue-text:#0C447C;--radius:12px}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px}
 .app{max-width:900px;margin:0 auto;padding:24px 16px}
 h1{font-size:22px;font-weight:700;margin-bottom:4px}
@@ -15,162 +15,175 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
 .stat-n{font-size:28px;font-weight:700}
 .stat-l{font-size:12px;color:var(--text2);margin-top:4px}
+.toolbar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.btn{padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-outline{background:var(--surface);color:var(--text);border:1px solid var(--border2)}
+.btn:hover{opacity:.9}
 .vendor-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
-.vendor-header{padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--border)}
+.vendor-header{padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
 .vendor-header:hover{background:var(--bg)}
 .vendor-name{font-size:16px;font-weight:600}
-.vendor-stats{font-size:13px;color:var(--text2)}
-.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.vendor-stats{font-size:13px;color:var(--text2);margin-top:2px}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden;width:200px}
 .progress-fill{height:100%;background:var(--purple);border-radius:2px}
-.vendor-body{display:none;padding:12px}
+.vendor-body{display:none;border-top:1px solid var(--border)}
 .vendor-body.open{display:block}
-.client-row{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 12px;border-radius:8px;margin-bottom:6px;background:var(--bg)}
-.client-row.done{background:#F0FBF6}
-.client-name{font-size:13px;font-weight:500}
-.client-meta{font-size:11px;color:var(--text2);margin-top:2px}
-.client-edfs{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
-.pill{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th{background:var(--bg);padding:10px 12px;text-align:left;font-weight:600;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.table td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.table tr:last-child td{border-bottom:none}
+.table tr:hover td{background:var(--bg)}
+.pill{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;display:inline-block}
 .pill-ccu{background:var(--blue-bg);color:var(--blue-text)}
 .pill-ado{background:var(--green-bg);color:var(--green-text)}
-.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-left:8px}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap}
 .badge-ok{background:var(--green-bg);color:var(--green-text)}
 .badge-pend{background:var(--amber-bg);color:var(--amber-text)}
-.btn{padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none}
-.btn-purple{background:var(--purple);color:#fff;margin-bottom:24px}
-.btn-purple:hover{opacity:.9}
-.note{font-size:12px;color:var(--text3);margin-top:8px}
+.loading{text-align:center;padding:60px;color:var(--text2)}
+.error{background:#FEE;border:1px solid #FCC;border-radius:8px;padding:16px;margin-bottom:20px;color:#900;font-size:13px}
+.last-update{font-size:12px;color:var(--text3);margin-left:auto}
+.filter-wrap{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-wrap select{padding:6px 10px;border:1px solid var(--border2);border-radius:8px;font-size:13px;background:var(--surface);color:var(--text)}
+.filter-wrap input{padding:6px 10px;border:1px solid var(--border2);border-radius:8px;font-size:13px;flex:1;min-width:150px}
 </style>
 </head>
 <body>
 <div class="app">
   <h1>Panel administrador — EDF</h1>
-  <p class="sub">Los datos se actualizan en tiempo real desde Google Sheets. Este panel lee el estado guardado localmente en cada dispositivo.</p>
-  
-  <div class="stats" id="stats"></div>
-  
-  <button class="btn btn-purple" onclick="exportarExcel()">📥 Exportar todo a Excel</button>
-  <p class="note">El Excel incluye todos los datos cargados en Google Sheets.</p>
+  <p class="sub" id="last-update">Cargando datos desde Google Sheets...</p>
 
-  <div id="vendors"></div>
+  <div id="error-box" style="display:none" class="error"></div>
+  <div class="stats" id="stats"><div class="loading">⏳ Cargando...</div></div>
+
+  <div class="toolbar">
+    <button class="btn btn-purple" onclick="exportarExcel()">📥 Exportar a Excel</button>
+    <button class="btn btn-outline" onclick="cargarDatos()">↺ Actualizar</button>
+  </div>
+
+  <div id="vendors"><div class="loading">⏳ Cargando datos...</div></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const VENDORS = ["ANDREA RAMIREZ", "FRANCISCO PIZZI", "MARINA COLLAZO", "ALFONSINA OREFICE", "SOFIA LUDOVICO"];
-const SEED = {"ANDREA RAMIREZ":[{"id":"3347","razon":"ORLANDO JULIAN MATIAS","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"505","razon":"CARECO SUPERS S.A-CENTRAL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"747","razon":"SCHMUNCK LUCAS ADRIAN","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4716","razon":"MARTINEZ SANDRA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5195","razon":"SUPER BONYOS SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5394","razon":"SUPER BONYOS SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5727","razon":"DE ANDREA ALEJANDRO AGUSTIN","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6771","razon":"RIVAS JULIO","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6195","razon":"WU HAIDONG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"6196","razon":"HUANG RONGSHENG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"8204","razon":"VERA LEONEL","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8982","razon":"MOLINA ALEJANDRA ESTELA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4941","razon":"WARD TOMAS ROBERTO","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"1544","razon":"DELUCHI JIMENA VANESA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"2917","razon":"CATRACCHIA FRANCISCO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"6819","razon":"VARELA FERNANDO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"8212","razon":"SILVA DEBORA YANINA Y GONZALEZ NATALIE JEANETTE","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6931","razon":"PEREZ AGUSTIN NAZARENO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7053","razon":"CHORHY IGNACIO JAVIER","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8218","razon":"ZHENG QIWEN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8852","razon":"TRESAR REGIA Y TANO","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"ADO","puertas":1}]},{"id":"7058","razon":"PINTZAS MATIAS MIGUEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}]}],"FRANCISCO PIZZI":[{"id":"737","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"796","razon":"GHESSI MARCOS DAMIAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"913","razon":"CHEN JIE","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1}]},{"id":"1040","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"1186","razon":"RIENZI GONZALO LEONEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"1213","razon":"LOPEZ VERONICA SOLEDAD","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"1283","razon":"LIN MEIXIA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"1374","razon":"LIU LIFEN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"1523","razon":"CHEN SHIGUANG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"2230","razon":"LIN GUOXIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"3309","razon":"DEMARCO MARINA ELISABETH","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"3364","razon":"DEMINICIS SERGIO ALCIDES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"3410","razon":"RODRIGUEZ CECILIA ROXANA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4249","razon":"WANG WENJUAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"5119","razon":"RIVERO YANINA SOLEDAD","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5138","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5139","razon":"PIABEL SERVICIOS ALIMENTICIOS","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"5293","razon":"ISLAS ORTIZ MARIO NICOLAS","rubro":"PAN/VER/CARN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6211","razon":"ZALAZAR DAIANA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6272","razon":"ROSSI MARIA SOLEDAD","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"515","razon":"DI TATA RENZO JAVIER","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"1032","razon":"ITTURRIOZ RICARDO","rubro":"PAN/VER/CARN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"1578","razon":"GIACOY MONICA ISABEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"1829","razon":"CLIMINO SERGIO JAVIER","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"2270","razon":"PUYELLI CARLOS ALBERTO","rubro":"VINOTECAS","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4003","razon":"MATESA MILAGROS","rubro":"PAN/VER/CARN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5467","razon":"BONAPARTE ROSEMARY HAYDEE","rubro":"RESTAURANTE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5505","razon":"GOBETTI DANIELA ANDREA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6326","razon":"ACEBAL MARCOS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6950","razon":"VIVANCO DEBORA EUGENIA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7040","razon":"ROMEO ADRIAN","rubro":"SAR","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"8899","razon":"CAPECCI MARCELA ALEJANDRA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8958","razon":"MORETTI MARIA AILIN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9040","razon":"LOREZA BEAUTY CENTER","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9082","razon":"RONDON JUAN MANUEL","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6379","razon":"BOCCONI ERICA","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8456","razon":"BRAÑAS EDUARDO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9128","razon":"ALTO RIO SEGURO S.A.","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9294","razon":"SANCHEZ SEBASTIAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"3700","razon":"DIAZ YANINA","rubro":"KIOSCO","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"9187","razon":"ROMEO ADRIAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"ADO","puertas":1}]}],"MARINA COLLAZO":[{"id":"345","razon":"COOP.AGROP.DE S.A.ARECO LTDA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"1171","razon":"WANG XIUYAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"3589","razon":"ARECO RUGBY CLUB","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"3637","razon":"CHEN QING","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4446","razon":"CHEN FANGJIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5439","razon":"BISOGNO MARTIN","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5884","razon":"CHEN QU","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":2},{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"5991","razon":"CLUB ATLETICO RIVER PLATE","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6540","razon":"DOLEZOR ANAHI ROCIO","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"7074","razon":"SOLVEYRA JOSE MARIA","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7167","razon":"SUPER CAMPEON SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8796","razon":"CARDENAS ALEXIS EZEQUIEL","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8282","razon":"YAN LIANGSONG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8739","razon":"ALVAREZ MARIO ALBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"4647","razon":"BRITES FLAVIA MARIANGELES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6069","razon":"DON CARMELO ALIMENTOS CONGELADOS","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6204","razon":"PUNTE GASTON LUIS","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6309","razon":"GRAMUGLIA JUAN SEBASTIAN","rubro":"PIZZERIA","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6735","razon":"DIAZ CARLA ANTONELLA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"6994","razon":"LEGUIZAMON VIRGINIA NOELI","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7207","razon":"GARCIA WALTER FABIAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"5047","razon":"EL TOKIO VIEJO SRL","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"9212","razon":"CITTADINI ESTEBAN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9432","razon":"NAVAS SANSEVERINO ALFONSO","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]}],"ALFONSINA OREFICE":[{"id":"7145","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7156","razon":"GUAN YANHUA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7181","razon":"HERRERA LEANDRO ANDRES","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7344","razon":"BESSONE AGUSTIN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7590","razon":"GALLO LLORENTE EMILIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7790","razon":"MARCONI OMAR NELDO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8244","razon":"GONZALEZ MARTA ALICIA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8753","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9320","razon":"GRUPO BDA S.A.","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7127","razon":"BUSTOS WALTER ALBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7132","razon":"YAN LINGXIANG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7146","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7157","razon":"LIN XIAOYAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7161","razon":"LI HONGLIN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7173","razon":"ZHENG XIAOFANG","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7224","razon":"CORNUCHO ANA GRACIELA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7227","razon":"YAN MINGXING","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7230","razon":"CAIONE LILIAN MARIEL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7275","razon":"LI GUOHUA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7366","razon":"HUANG SHUJUAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7673","razon":"MALIZIA OSVALDO SANTIAGO","rubro":"BAR/CAFÉ","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8019","razon":"ROCCA TERESITA","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8037","razon":"ROSALES DANIEL LUJAN","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8299","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8397","razon":"CORNUCHO ANA GRACIELA","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8445","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8577","razon":"PAPUK NELIDA RAQUEL","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8633","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8848","razon":"RONGVAUX NICOLAS","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9057","razon":"GALLO LLORENTE EMILIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"9145","razon":"ZHENG KAIJIE","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7701","razon":"EMPRENDIMIENTOS DON LINO GASTRO S.R.L","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"8700","razon":"SOBRAL HERNAN ALEJANDRO","rubro":"","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"9000","razon":"LAURENCO MARIANO ALBERTO","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"9340","razon":"MORENO JULIANA BELEN","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"9395","razon":"CORNUCHO ANA GRACIELA","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]}],"SOFIA LUDOVICO":[{"id":"6930","razon":"FIGOLI SRL","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7203","razon":"FARIAS JAVIER RAMON","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7426","razon":"MARCHESSE IGNACIO","rubro":"VINOTECAS","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7597","razon":"BIGEON JOSE LUIS","rubro":"KIOSKO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7598","razon":"SANCHEZ ROCIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8233","razon":"CARDASCIA MICAELA","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8313","razon":"LI HONGJUAN","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"8474","razon":"CASA LUSARDI S. CAP I SECC IV","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"8754","razon":"LONZO AGUSTIN","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"2834","razon":"RODRIGUEZ JAVIER","rubro":"VINOTECAS","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8451","razon":"SANCHEZ ROCIO","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7120","razon":"NICODEMO NESTOR ROBERTO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7622","razon":"6740 CANGUS S.R.L","rubro":"CLUB","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7680","razon":"MILIONE JOSE ANTONIO","rubro":"AUTOSERVICIO","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7932","razon":"SANCHEZ ROCIO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":2}]},{"id":"8177","razon":"PESOINBOURE NATALIA VANESA","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"8750","razon":"NICODEMO NESTOR ROBERTO","rubro":"ALMACEN","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7323","razon":"GELTOKIA SRL","rubro":"EESS","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"8419","razon":"BOTTA NICOLAS RUBEN","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9229","razon":"RODRIGUEZ ESTEBAN DANIEL","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"9219","razon":"VILLALBA LAUREANO OSCAR","rubro":"ON PREMISE","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"ADO","puertas":1}]},{"id":"9266","razon":"CARDASCIA MICAELA SOLEDAD","rubro":"TRADI","edfs_esperados":[{"tipo":"CCU","puertas":1}]},{"id":"7134","razon":"FERNANDEZ ANDRES ESTEBAN","rubro":"SELF","edfs_esperados":[{"tipo":"ADO","puertas":1}]},{"id":"9423","razon":"SUPERMERCADO YURNE 2026 S.R.L","rubro":"","edfs_esperados":[{"tipo":"CCU","puertas":1},{"tipo":"CCU","puertas":1}]},{"id":"9449","razon":"PETRUCCELLI ARIEL","rubro":"","edfs_esperados":[{"tipo":"ADO","puertas":1},{"tipo":"ADO","puertas":1}]}]};
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzy-dvwJwWIhfjwNx4dUH3yLnCXMEvQKkV_9qV-PA_zATyNMZWRcOG9T9TP709jbE4S/exec";
+let allRows = [];
+let headers = [];
 
-function cargarTodos() {
-  const result = {};
-  VENDORS.forEach(v => {
-    const key = 'edf_v3_' + v.replace(/\s+/g,'_');
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw) {
-        const saved = JSON.parse(raw);
-        const clientes = SEED[v].map(s => {
-          const g = saved.find(x => x.id === s.id);
-          return {...s, edfs: g ? (g.edfs||[]) : []};
-        });
-        saved.forEach(g => {
-          if (g._nuevo && !clientes.find(c => c._tmpId === g._tmpId)) clientes.push({...g});
-        });
-        result[v] = clientes;
-      } else {
-        result[v] = SEED[v].map(s => ({...s, edfs:[]}));
-      }
-    } catch(e) {
-      result[v] = SEED[v].map(s => ({...s, edfs:[]}));
+async function cargarDatos() {
+  document.getElementById('last-update').textContent = 'Actualizando...';
+  document.getElementById('error-box').style.display = 'none';
+  try {
+    const res = await fetch(SHEETS_URL + '?t=' + Date.now());
+    const data = await res.json();
+    if (!data || data.length < 2) {
+      mostrarError('La planilla está vacía o no tiene datos todavía.');
+      return;
     }
-  });
-  return result;
+    headers = data[0];
+    allRows = data.slice(1);
+    document.getElementById('last-update').textContent = 'Última actualización: ' + new Date().toLocaleString('es-AR');
+    renderTodo();
+  } catch(e) {
+    mostrarError('No se pudo conectar con Google Sheets. Verificá tu conexión. (' + e.message + ')');
+  }
 }
 
-function render() {
-  const todos = cargarTodos();
-  let totalCli=0, totalEdf=0, cargadosEdf=0, completadosCli=0;
-  
-  VENDORS.forEach(v => {
-    const cl = todos[v];
-    totalCli += cl.length;
-    cl.forEach(c => {
-      const esp = c.edfs_esperados ? c.edfs_esperados.length : 0;
-      const carg = c.edfs ? c.edfs.length : 0;
-      totalEdf += esp;
-      cargadosEdf += carg;
-      if (esp > 0 && carg >= esp) completadosCli++;
-    });
+function mostrarError(msg) {
+  const el = document.getElementById('error-box');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('last-update').textContent = 'Error al cargar';
+}
+
+function col(row, nombre) {
+  const i = headers.indexOf(nombre);
+  return i >= 0 ? row[i] : '';
+}
+
+function renderTodo() {
+  // Agrupar por vendedor
+  const porVendedor = {};
+  allRows.forEach(row => {
+    const v = col(row, 'Vendedor');
+    if (!porVendedor[v]) porVendedor[v] = [];
+    porVendedor[v].push(row);
+  });
+
+  // Stats globales
+  const totalEDF = allRows.length;
+  const vendedores = Object.keys(porVendedor);
+  const movs = {};
+  allRows.forEach(row => {
+    const m = col(row, 'Movimiento');
+    movs[m] = (movs[m]||0) + 1;
   });
 
   document.getElementById('stats').innerHTML = `
-    <div class="stat"><div class="stat-n">${totalCli}</div><div class="stat-l">Clientes totales</div></div>
-    <div class="stat"><div class="stat-n" style="color:#0F6E56">${completadosCli}</div><div class="stat-l">Clientes completados</div></div>
-    <div class="stat"><div class="stat-n">${totalEdf}</div><div class="stat-l">EDF esperados</div></div>
-    <div class="stat"><div class="stat-n" style="color:#533AB7">${cargadosEdf}</div><div class="stat-l">EDF relevados</div></div>
+    <div class="stat"><div class="stat-n">${totalEDF}</div><div class="stat-l">EDF relevados</div></div>
+    <div class="stat"><div class="stat-n">${vendedores.length}</div><div class="stat-l">Vendedores activos</div></div>
+    <div class="stat"><div class="stat-n">${movs['Instalacion']||0}</div><div class="stat-l">Instalaciones</div></div>
+    <div class="stat"><div class="stat-n">${movs['Retiro']||0}</div><div class="stat-l">Retiros</div></div>
+    <div class="stat"><div class="stat-n">${movs['Baja']||0}</div><div class="stat-l">Bajas</div></div>
+    <div class="stat"><div class="stat-n">${movs['No Gestionable']||0}</div><div class="stat-l">No Gestionables</div></div>
   `;
 
-  document.getElementById('vendors').innerHTML = VENDORS.map(v => {
-    const cl = todos[v];
-    const esp = cl.reduce((a,c) => a+(c.edfs_esperados?c.edfs_esperados.length:0),0);
-    const carg = cl.reduce((a,c) => a+(c.edfs?c.edfs.length:0),0);
-    const done = cl.filter(c => c.edfs_esperados && c.edfs_esperados.length>0 && c.edfs && c.edfs.length>=c.edfs_esperados.length).length;
-    const pct = cl.length>0 ? Math.round(done/cl.length*100) : 0;
-    const rows = cl.map(c => {
-      const edfs = c.edfs||[];
-      const isDone = c.edfs_esperados && c.edfs_esperados.length>0 && edfs.length>=c.edfs_esperados.length;
-      const pills = edfs.map(e => `<span class="pill pill-${e.tipo.toLowerCase()}">${e.tipo} · ${e.serie||'?'} · ${e.mov}</span>`).join('');
-      return `<div class="client-row ${isDone?'done':''}">
-        <div>
-          <div class="client-name">${c.razon}</div>
-          <div class="client-meta">${c.rubro||'—'} · ID: ${c.id||'Nuevo'}</div>
-          ${pills ? '<div class="client-edfs">'+pills+'</div>' : ''}
-        </div>
-        <span class="badge ${isDone?'badge-ok':'badge-pend'}">${edfs.length}/${c.edfs_esperados?c.edfs_esperados.length:0}</span>
-      </div>`;
+  document.getElementById('vendors').innerHTML = vendedores.map(v => {
+    const rows = porVendedor[v];
+    const tableRows = rows.map(row => {
+      const tipo = col(row,'Tipo EDF');
+      const pillClass = tipo === 'CCU' ? 'pill-ccu' : 'pill-ado';
+      return `<tr>
+        <td>${col(row,'ID Cliente')}</td>
+        <td><strong>${col(row,'Razón Social')}</strong></td>
+        <td>${col(row,'Rubro')}</td>
+        <td><span class="pill ${pillClass}">${tipo}</span></td>
+        <td>${col(row,'Puertas')}</td>
+        <td>${col(row,'N° Serie')}</td>
+        <td>${col(row,'N° Activo')||'—'}</td>
+        <td><span class="badge badge-ok">${col(row,'Movimiento')}</span></td>
+        <td style="color:var(--text3);font-size:11px">${col(row,'Fecha')||''}</td>
+      </tr>`;
     }).join('');
+
     return `<div class="vendor-section">
-      <div class="vendor-header" onclick="toggleVendor('v-${v.replace(/\s/g,'-')}')">
+      <div class="vendor-header" onclick="toggle('vb-${v.replace(/\s/g,'_')}')">
         <div>
           <div class="vendor-name">${v}</div>
-          <div class="vendor-stats">${done}/${cl.length} clientes · ${carg}/${esp} EDF</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div class="vendor-stats">${rows.length} EDF relevados</div>
         </div>
-        <span class="badge ${pct===100?'badge-ok':'badge-pend'}">${pct}%</span>
+        <span class="badge badge-ok">${rows.length} ✓</span>
       </div>
-      <div class="vendor-body" id="v-${v.replace(/\s/g,'-')}">${rows}</div>
+      <div class="vendor-body" id="vb-${v.replace(/\s/g,'_')}">
+        <div style="overflow-x:auto">
+        <table class="table">
+          <thead><tr>
+            <th>ID</th><th>Razón Social</th><th>Rubro</th><th>Tipo</th>
+            <th>Puertas</th><th>N° Serie</th><th>N° Activo</th><th>Movimiento</th><th>Fecha</th>
+          </tr></thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
 
-function toggleVendor(id) {
+function toggle(id) {
   const el = document.getElementById(id);
-  el.classList.toggle('open');
+  if (el) el.classList.toggle('open');
 }
 
 function exportarExcel() {
-  const todos = cargarTodos();
-  const rows = [['Vendedor','ID Cliente','Razón Social','Rubro','Cliente Nuevo','N° Serie','N° Activo','Tipo EDF','Puertas','Movimiento','Observaciones']];
-  VENDORS.forEach(v => {
-    todos[v].forEach(c => {
-      const edfs = c.edfs||[];
-      if (!edfs.length) {
-        rows.push([v, c.id||'', c.razon, c.rubro||'', c._nuevo?'Sí':'No','','','','','','']);
-      } else {
-        edfs.forEach(e => {
-          rows.push([v, c.id||'', c.razon, c.rubro||'', c._nuevo?'Sí':'No', e.serie||'', e.activo||'', e.tipo, e.puertas, e.mov, e.obs||'']);
-        });
-      }
-    });
-  });
+  if (!allRows.length) { alert('No hay datos para exportar.'); return; }
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = [{wch:18},{wch:10},{wch:28},{wch:14},{wch:12},{wch:14},{wch:12},{wch:8},{wch:7},{wch:14},{wch:26}];
+  const ws = XLSX.utils.aoa_to_sheet([headers, ...allRows]);
   XLSX.utils.book_append_sheet(wb, ws, 'Relevamiento EDF');
   XLSX.writeFile(wb, 'relevamiento_edf_' + new Date().toISOString().slice(0,10) + '.xlsx');
 }
 
-render();
-setInterval(render, 30000); // refrescar cada 30s
+cargarDatos();
+setInterval(cargarDatos, 60000); // actualizar cada 1 minuto
 </script>
 </body>
 </html>
